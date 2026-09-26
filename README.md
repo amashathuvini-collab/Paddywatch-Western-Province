@@ -1,1 +1,462 @@
 # Paddywatch-Western-Province
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaddyWatch | Western Province</title>
+
+<!-- Leaflet map library -->
+<link rel="stylesheet"
+ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+:root {
+  --green: #245746;
+  --light: #f4f7f2;
+  --orange: #c66b3d;
+  --text: #24352e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: var(--light);
+}
+header {
+  background: var(--green);
+  color: white;
+  padding: 22px 6%;
+}
+header h1 { margin: 0 0 8px; }
+header p { margin: 0; line-height: 1.5; }
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 6%;
+  background: white;
+  border-bottom: 1px solid #dce5dd;
+}
+nav button {
+  border: 0;
+  padding: 11px 15px;
+  border-radius: 7px;
+  background: #e8eee8;
+  color: var(--green);
+  cursor: pointer;
+}
+nav button.active {
+  background: var(--green);
+  color: white;
+}
+main { padding: 22px 6%; }
+.tab { display: none; }
+.tab.active { display: block; }
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  border: 1px solid #e0e7df;
+}
+#map {
+  width: 100%;
+  height: 540px;
+  border-radius: 10px;
+  border: 1px solid #ccd8ce;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 15px 0;
+}
+label { cursor: pointer; }
+input, select {
+  accent-color: var(--green);
+}
+.legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+  font-size: 14px;
+}
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.green { background: #398451; }
+.orange { background: #d8753e; }
+a { color: #245746; }
+iframe {
+  width: 100%;
+  min-height: 550px;
+  border: 0;
+}
+footer {
+  padding: 22px 6%;
+  background: #e5ece5;
+  font-size: 13px;
+}
+@media(max-width:600px) {
+  #map { height: 420px; }
+  main { padding: 15px 4%; }
+  header { padding: 20px 4%; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>PaddyWatch</h1>
+  <p>Western Province, Sri Lanka</p>
+  <p>Mapping abandoned paddy lands and suspected illegal land filling</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="home">Home</button>
+  <button data-tab="mapTab">Interactive Map</button>
+  <button data-tab="reportTab">Report a Location</button>
+  <button data-tab="communityTab">Community Data</button>
+  <button data-tab="aboutTab">Data & Methodology</button>
+</nav>
+
+<main>
+  <section id="home" class="tab active">
+    <div class="card">
+      <h2>About this Web-GIS</h2>
+      <p>
+        PaddyWatch is an interactive Web-GIS application designed
+        to explore abandoned paddy lands and reported land filling
+        in the Western Province of Sri Lanka.
+      </p>
+      <p>
+        The map brings together spatial data and community
+        observations to support land monitoring and planning.
+      </p>
+      <button onclick="showTab('mapTab')">
+        Explore the map
+      </button>
+    </div>
+    <div class="card">
+      <h3>Objectives</h3>
+      <ul>
+        <li>Map abandoned paddy land locations.</li>
+        <li>Display reported or suspected land filling.</li>
+        <li>Encourage anonymous community observations.</li>
+        <li>Support evidence-based planning decisions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="mapTab" class="tab">
+    <div class="card">
+      <h2>Interactive Map</h2>
+      <p>
+        Select a basemap and switch thematic layers on or off.
+        Click a feature to view its available information.
+      </p>
+
+      <div class="controls">
+        <label>
+          <input type="checkbox" id="paddyCheck" checked>
+          Abandoned paddy lands
+        </label>
+        <label>
+          <input type="checkbox" id="fillingCheck" checked>
+          Reported land filling
+        </label>
+        <label>
+          <input type="checkbox" id="boundaryCheck" checked>
+          Study area boundary
+        </label>
+      </div>
+
+      <div class="legend">
+        <span><i class="dot green"></i>Abandoned paddy</span>
+        <span><i class="dot orange"></i>Reported filling</span>
+      </div>
+
+      <div id="map"></div>
+      <p id="mapStatus">Loading map layers...</p>
+    </div>
+  </section>
+
+  <section id="reportTab" class="tab">
+    <div class="card">
+      <h2>Report a Location</h2>
+      <p>
+        Have you observed an abandoned paddy land or possible
+        land filling? Share the location and your observations.
+      </p>
+      <p>
+        Please report only what you observed. Submissions are
+        community reports and are not automatically verified.
+      </p>
+
+      <!-- REPLACE WITH YOUR GOOGLE FORM LINK -->
+      <a id="formLink" href="YOUR_GOOGLE_FORM_LINK"
+         target="_blank" rel="noopener">
+        Open the Community Reporting Form
+      </a>
+    </div>
+  </section>
+
+  <section id="communityTab" class="tab">
+    <div class="card">
+      <h2>Community Observations</h2>
+      <p>
+        View responses submitted through the community form.
+        Personal information should not be published.
+      </p>
+
+      <!-- REPLACE WITH YOUR PUBLISHED GOOGLE SHEET EMBED URL -->
+      <iframe id="sheetFrame"
+        src="YOUR_PUBLISHED_SHEET_EMBED_URL"
+        title="Community response summary"
+        loading="lazy">
+      </iframe>
+
+      <p>
+        <a id="sheetLink" href="YOUR_PUBLISHED_SHEET_URL"
+           target="_blank" rel="noopener">
+          Open community data in a new tab
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section id="aboutTab" class="tab">
+    <div class="card">
+      <h2>Data & Methodology</h2>
+      <h3>Data sources</h3>
+      <ul>
+        <li>Abandoned paddy land layer: study data.</li>
+        <li>Land filling layer: study data / reports.</li>
+        <li>Study boundary: administrative GIS data.</li>
+        <li>Basemaps: OpenStreetMap and Esri imagery.</li>
+        <li>Community observations: Google Forms.</li>
+      </ul>
+
+      <h3>Method</h3>
+      <p>
+        Spatial layers are displayed using Leaflet.
+        Users can explore mapped features and submit
+        community observations through a separate form.
+      </p>
+
+      <h3>Limitations</h3>
+      <p>
+        Community reports are not proof of illegal activity.
+        Location accuracy, data completeness and verification
+        depend on the available evidence.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>
+    PL 3508 – Advanced GIS and Remote Sensing for Planning
+  </p>
+  <p>
+    Data should be interpreted according to its source,
+    date, accuracy and verification status.
+  </p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// TAB NAVIGATION
+function showTab(id) {
+  document.querySelectorAll(".tab").forEach(el =>
+    el.classList.remove("active")
+  );
+  document.querySelectorAll("nav button").forEach(el =>
+    el.classList.remove("active")
+  );
+  document.getElementById(id).classList.add("active");
+
+  const button = document.querySelector(
+    'nav button[data-tab="' + id + '"]'
+  );
+  if (button) button.classList.add("active");
+
+  if (id === "mapTab" && window.map) {
+    setTimeout(() => map.invalidateSize(), 100);
+  }
+}
+
+document.querySelectorAll("nav button").forEach(button => {
+  button.addEventListener("click", () =>
+    showTab(button.dataset.tab)
+  );
+});
+
+// BASEMAPS
+const map = L.map("map").setView([6.9, 79.9], 10);
+window.map = map;
+
+const osm = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }
+);
+
+const satellite = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "Tiles &copy; Esri",
+    maxZoom: 19
+  }
+);
+
+const labels = L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
+  {
+    attribution: "&copy; CARTO",
+    maxZoom: 19
+  }
+);
+
+osm.addTo(map);
+
+L.control.layers({
+  "OpenStreetMap": osm,
+  "Satellite imagery": satellite,
+  "Satellite + labels": L.layerGroup([satellite, labels])
+}, null, { collapsed: false }).addTo(map);
+
+// THEMATIC LAYERS
+let paddyLayer, fillingLayer, boundaryLayer;
+
+function paddyStyle() {
+  return {
+    color: "#245f3b",
+    weight: 1.5,
+    fillColor: "#68a878",
+    fillOpacity: 0.65
+  };
+}
+
+function fillingStyle() {
+  return {
+    color: "#a84e24",
+    weight: 1.5,
+    fillColor: "#e58a50",
+    fillOpacity: 0.7
+  };
+}
+
+function boundaryStyle() {
+  return {
+    color: "#425d9b",
+    weight: 2,
+    fillOpacity: 0
+  };
+}
+
+function popupContent(feature, title) {
+  const props = feature.properties || {};
+  let html = "<b>" + title + "</b><br>";
+
+  Object.keys(props).forEach(key => {
+    const value = props[key];
+    if (value !== null && value !== undefined) {
+      html += "<b>" + key + ":</b> " +
+        String(value) + "<br>";
+    }
+  });
+  return html;
+}
+
+async function loadLayer(url, style, title) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Could not load " + url);
+  }
+  const data = await response.json();
+
+  return L.geoJSON(data, {
+    style: style,
+    pointToLayer: (feature, latlng) =>
+      L.circleMarker(latlng, {
+        radius: 7,
+        ...style()
+      }),
+    onEachFeature: (feature, layer) => {
+      layer.bindPopup(popupContent(feature, title));
+    }
+  });
+}
+
+function setLayer(layer, checked) {
+  if (!layer) return;
+  if (checked && !map.hasLayer(layer)) layer.addTo(map);
+  if (!checked && map.hasLayer(layer)) map.removeLayer(layer);
+}
+
+async function initialiseLayers() {
+  const status = document.getElementById("mapStatus");
+
+  try {
+    // DATA FILE PATHS: upload these into the data folder
+    paddyLayer = await loadLayer(
+      "data/abandoned_paddy.geojson",
+      paddyStyle,
+      "Abandoned paddy land"
+    );
+
+    fillingLayer = await loadLayer(
+      "data/land_filling.geojson",
+      fillingStyle,
+      "Reported land filling"
+    );
+
+    boundaryLayer = await loadLayer(
+      "data/administrative_boundary.geojson",
+      boundaryStyle,
+      "Study area boundary"
+    );
+
+    paddyLayer.addTo(map);
+    fillingLayer.addTo(map);
+    boundaryLayer.addTo(map);
+
+    document.getElementById("paddyCheck").onchange = e =>
+      setLayer(paddyLayer, e.target.checked);
+
+    document.getElementById("fillingCheck").onchange = e =>
+      setLayer(fillingLayer, e.target.checked);
+
+    document.getElementById("boundaryCheck").onchange = e =>
+      setLayer(boundaryLayer, e.target.checked);
+
+    const all = L.featureGroup([
+      paddyLayer, fillingLayer, boundaryLayer
+    ]);
+    if (all.getBounds().isValid()) {
+      map.fitBounds(all.getBounds(), { padding: [20, 20] });
+    }
+
+    status.textContent = "GIS layers loaded successfully.";
+  } catch (error) {
+    console.error(error);
+    status.textContent =
+      "Some GIS layers could not be loaded. Check file names and paths.";
+  }
+}
+
+initialiseLayers();
+</script>
+</body>
+</html>
