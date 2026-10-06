@@ -1,478 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>PaddyWatch - Western Province</title>
 
-<!-- Leaflet -->
 <link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- Turf -->
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+
 
 <style>
 
-* {
-  box-sizing: border-box;
+*{
+box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f5f7f5;
-  color: #263238;
+body{
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:#f4f6f4;
+color:#263238;
 }
 
-/* =========================
-   HEADER
-========================= */
 
-header {
-  background: #1b5e20;
-  color: white;
-  padding: 18px 24px;
+/* HEADER */
+
+header{
+background:#1b5e20;
+color:white;
+padding:18px 24px;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 28px;
+header h1{
+margin:0;
+font-size:28px;
 }
 
-header p {
-  margin: 6px 0 0;
-  font-size: 14px;
-  opacity: 0.92;
+header p{
+margin:6px 0 0;
+font-size:14px;
 }
 
-/* =========================
-   NAVIGATION
-========================= */
 
-nav {
-  background: white;
-  border-bottom: 1px solid #d0d7d3;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 15px;
+/* NAVIGATION */
+
+nav{
+background:white;
+border-bottom:1px solid #d5d5d5;
+display:flex;
+flex-wrap:wrap;
+padding:0 12px;
 }
 
-nav button {
-  border: none;
-  background: transparent;
-  padding: 14px 18px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #37474f;
+nav button{
+border:0;
+background:white;
+padding:14px 17px;
+cursor:pointer;
+font-size:14px;
+color:#37474f;
 }
 
-nav button:hover {
-  background: #e8f5e9;
+nav button:hover{
+background:#f1f8f2;
 }
 
-nav button.active {
-  color: #1b5e20;
-  font-weight: bold;
-  border-bottom: 3px solid #2e7d32;
+nav button.active{
+color:#1b5e20;
+font-weight:bold;
+border-bottom:3px solid #2e7d32;
 }
 
-/* =========================
-   CONTENT
-========================= */
 
-.tab {
-  display: none;
-  padding: 20px;
+/* TABS */
+
+.tab{
+display:none;
+padding:20px;
 }
 
-.tab.active {
-  display: block;
+.tab.active{
+display:block;
 }
 
-.container {
-  max-width: 1400px;
-  margin: auto;
+.container{
+max-width:1450px;
+margin:auto;
 }
 
-.card {
-  background: white;
-  border-radius: 10px;
-  padding: 18px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+/* CARDS */
+
+.card{
+background:white;
+border-radius:10px;
+padding:18px;
+margin-bottom:18px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 .card h2,
-.card h3 {
-  margin-top: 0;
-  color: #1b5e20;
+.card h3{
+margin-top:0;
+color:#1b5e20;
 }
 
-/* =========================
-   MAP
-========================= */
 
-#map {
-  height: 72vh;
-  min-height: 600px;
-  border-radius: 10px;
-  overflow: hidden;
+/* HOME */
+
+.hero{
+background:linear-gradient(
+135deg,
+#1b5e20,
+#388e3c
+);
+color:white;
+border-radius:12px;
+padding:32px;
 }
 
-/* =========================
-   MAP CONTROLS
-========================= */
-
-.map-panel {
-  position: absolute;
-  z-index: 1000;
-  background: white;
-  padding: 14px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+.hero h2{
+color:white;
+margin-top:0;
+font-size:30px;
 }
 
-#filterPanel {
-  top: 85px;
-  left: 15px;
-  width: 260px;
-  max-height: 75vh;
-  overflow-y: auto;
+.theme-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:18px;
+margin-top:20px;
 }
 
-.map-panel h3 {
-  margin: 0 0 10px;
-  color: #1b5e20;
-  font-size: 16px;
+.theme-box{
+background:white;
+padding:20px;
+border-radius:9px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+border-left:6px solid #2e7d32;
 }
 
-.map-panel label {
-  display: block;
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 8px;
-  color: #455a64;
+.theme-box.orange{
+border-left-color:#e65100;
 }
 
-.map-panel select {
-  width: 100%;
-  padding: 7px;
-  margin-top: 3px;
-  border: 1px solid #b0bec5;
-  border-radius: 5px;
-  background: white;
+
+/* MAP */
+
+#map{
+height:75vh;
+min-height:620px;
+border-radius:10px;
 }
 
-.layer-group {
-  margin-top: 12px;
-  border-top: 1px solid #e0e0e0;
-  padding-top: 10px;
+.map-wrapper{
+position:relative;
 }
 
-.layer-group strong {
-  display: block;
-  color: #37474f;
-  font-size: 13px;
-  margin-bottom: 6px;
+
+/* CONTROL PANEL */
+
+.control-panel{
+position:absolute;
+z-index:1000;
+top:12px;
+left:12px;
+width:285px;
+max-height:calc(75vh - 24px);
+overflow-y:auto;
+background:white;
+padding:14px;
+border-radius:9px;
+box-shadow:0 2px 12px rgba(0,0,0,.22);
 }
 
-.layer-check {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  margin: 5px 0;
+.control-panel h3{
+margin:0 0 12px;
+font-size:16px;
+color:#1b5e20;
 }
 
-.layer-check input {
-  margin: 0;
+.control-panel .title{
+display:block;
+font-size:12px;
+font-weight:bold;
+color:#455a64;
+margin-top:8px;
+margin-bottom:3px;
 }
 
-/* =========================
-   LEGEND
-========================= */
-
-.legend {
-  background: white;
-  padding: 10px;
-  line-height: 18px;
-  color: #263238;
-  border-radius: 7px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+.control-panel select{
+width:100%;
+padding:7px;
+border:1px solid #b0bec5;
+border-radius:5px;
+background:white;
 }
 
-.legend-title {
-  font-weight: bold;
-  margin-bottom: 6px;
-  font-size: 13px;
+.layer-group{
+border-top:1px solid #e0e0e0;
+margin-top:12px;
+padding-top:10px;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  font-size: 11px;
-  margin: 3px 0;
+.group-title{
+font-weight:bold;
+font-size:13px;
+margin-bottom:7px;
+color:#37474f;
 }
 
-.legend-box {
-  width: 20px;
-  height: 13px;
-  margin-right: 6px;
-  border: 1px solid #777;
+.check{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:12px;
+margin:6px 0;
 }
 
-/* =========================
-   STATUS
-========================= */
-
-#loadStatus {
-  background: #fff8e1;
-  border-left: 4px solid #f9a825;
-  padding: 10px;
-  margin-bottom: 10px;
-  font-size: 13px;
+.check input{
+margin:0;
 }
 
-/* =========================
-   HOME
-========================= */
 
-.hero {
-  background: linear-gradient(
-    135deg,
-    #1b5e20,
-    #388e3c
-  );
-  color: white;
-  border-radius: 12px;
-  padding: 35px;
-  margin-bottom: 20px;
+/* STATUS */
+
+.status{
+background:#fff8e1;
+border-left:4px solid #f9a825;
+padding:10px;
+margin-bottom:10px;
+font-size:13px;
 }
 
-.hero h2 {
-  color: white;
-  font-size: 30px;
-  margin-top: 0;
+
+/* LEGEND */
+
+.legend{
+background:white;
+padding:10px;
+border-radius:7px;
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+font-size:11px;
+line-height:16px;
 }
 
-.theme-boxes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 18px;
+.legend-title{
+font-weight:bold;
+font-size:12px;
+margin-bottom:5px;
 }
 
-.theme-box {
-  padding: 22px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.legend-row{
+display:flex;
+align-items:center;
+margin:3px 0;
 }
 
-.theme-box h3 {
-  margin-top: 0;
+.legend-box{
+width:22px;
+height:13px;
+margin-right:6px;
+border:1px solid #777;
 }
 
-.theme-abandoned {
-  border-left: 6px solid #2e7d32;
+.legend-line{
+width:23px;
+height:4px;
+margin-right:6px;
 }
 
-.theme-filling {
-  border-left: 6px solid #d84315;
+
+/* BUTTONS */
+
+.btn{
+display:inline-block;
+background:#2e7d32;
+color:white;
+padding:10px 16px;
+border:0;
+border-radius:6px;
+cursor:pointer;
+text-decoration:none;
 }
 
-/* =========================
-   TABLE
-========================= */
+.btn:hover{
+background:#1b5e20;
+}
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
+.btn.orange{
+background:#d84315;
+}
+
+.btn.grey{
+background:#546e7a;
+}
+
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:13px;
 }
 
 th,
-td {
-  border: 1px solid #d5d5d5;
-  padding: 9px;
-  text-align: left;
+td{
+border:1px solid #ddd;
+padding:8px;
+text-align:left;
 }
 
-th {
-  background: #e8f5e9;
-  color: #1b5e20;
+th{
+background:#e8f5e9;
+color:#1b5e20;
 }
 
-/* =========================
-   BUTTON
-========================= */
 
-.main-button {
-  display: inline-block;
-  background: #2e7d32;
-  color: white;
-  padding: 11px 18px;
-  border-radius: 6px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
+/* LOCATION */
+
+.location-box{
+background:#f1f8e9;
+border:1px solid #c5e1a5;
+border-radius:7px;
+padding:12px;
+margin:12px 0;
 }
 
-.main-button:hover {
-  background: #1b5e20;
+.notice{
+background:#fff3e0;
+border-left:4px solid #ef6c00;
+padding:10px;
+font-size:13px;
+margin:10px 0;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.small{
+font-size:12px;
+color:#607d8b;
+}
 
-@media(max-width: 700px) {
 
-  header h1 {
-    font-size: 22px;
-  }
+@media(max-width:800px){
 
-  nav button {
-    padding: 10px;
-    font-size: 12px;
-  }
+.control-panel{
+width:230px;
+}
 
-  #filterPanel {
-    width: 220px;
-  }
+#map{
+height:70vh;
+min-height:550px;
+}
 
-  #map {
-    height: 70vh;
-  }
+nav button{
+padding:11px 9px;
+font-size:12px;
+}
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <!-- =====================================================
-     HEADER
+HEADER
 ===================================================== -->
 
 <header>
 
-  <h1>PaddyWatch</h1>
+<h1>PaddyWatch</h1>
 
-  <p>
-    Web-GIS Application for Mapping Abandoned Paddy Lands
-    and Illegal Land Filling in Western Province, Sri Lanka
-  </p>
+<p>
+Web-GIS Application for Mapping Abandoned Paddy Lands
+and Illegal Land Filling in Western Province, Sri Lanka
+</p>
 
 </header>
 
 
 <!-- =====================================================
-     NAVIGATION
+NAVIGATION
 ===================================================== -->
 
 <nav>
 
-  <button class="tabButton active" onclick="openTab('home', this)">
-    Home
-  </button>
+<button
+class="tabButton active"
+onclick="openTab('home',this)">
+Home
+</button>
 
-  <button class="tabButton" onclick="openTab('mapTab', this)">
-    Interactive Map
-  </button>
+<button
+class="tabButton"
+onclick="openTab('mapTab',this)">
+Interactive Map
+</button>
 
-  <button class="tabButton" onclick="openTab('reportTab', this)">
-    Report a Location
-  </button>
+<button
+class="tabButton"
+onclick="openTab('communityTab',this)">
+Report & Community Engagement
+</button>
 
-  <button class="tabButton" onclick="openTab('communityTab', this)">
-    Community Data
-  </button>
-
-  <button class="tabButton" onclick="openTab('methodTab', this)">
-    Data & Methodology
-  </button>
+<button
+class="tabButton"
+onclick="openTab('methodTab',this)">
+Data & Methodology
+</button>
 
 </nav>
 
 
 <!-- =====================================================
-     HOME
+HOME
 ===================================================== -->
 
-<section id="home" class="tab active">
+<section
+id="home"
+class="tab active">
 
 <div class="container">
 
-  <div class="hero">
+<div class="hero">
 
-    <h2>PaddyWatch – Western Province</h2>
+<h2>
+PaddyWatch – Western Province
+</h2>
 
-    <p>
-      A Web-GIS application developed to visualize
-      abandoned paddy lands, paddy land distribution,
-      population density and reported land-filling locations
-      in Western Province.
-    </p>
+<p>
+Interactive Web-GIS application for exploring
+abandoned paddy lands, paddy land distribution,
+population density, GND population and
+reported/suspected land filling.
+</p>
 
-    <p>
-      The application supports spatial visualization,
-      administrative exploration and community reporting.
-    </p>
-
-  </div>
+</div>
 
 
-  <div class="theme-boxes">
-
-    <div class="theme-box theme-abandoned">
-
-      <h3>🌾 Abandoned Paddy Lands</h3>
-
-      <p>
-        The map calculates the abandonment rate using
-        abandoned paddy area and total paddy area.
-      </p>
-
-      <p>
-        <b>Abandonment Rate (%)</b>
-        =
-        Abandoned Paddy Area ÷ Total Paddy Area × 100
-      </p>
-
-    </div>
+<div class="theme-grid">
 
 
-    <div class="theme-box theme-filling">
+<div class="theme-box">
 
-      <h3>⚠ Reported / Suspected Land Filling</h3>
+<h3>
+🌾 Abandoned Paddy Lands
+</h3>
 
-      <p>
-        Locations reported by the community can be
-        visualized separately from the paddy-land analysis.
-      </p>
+<p>
+Abandoned paddy land is aggregated from the
+available grid data to calculate a
+DSD-wise abandonment rate.
+</p>
 
-    </div>
+<p>
+
+<b>
+DSD Abandonment Rate (%)
+</b>
+
+=
+
+Σ Abandoned Paddy Area
+
+÷
+
+Σ Paddy Area
+
+× 100
+
+</p>
+
+</div>
 
 
-    <div class="theme-box">
+<div class="theme-box orange">
 
-      <h3>👥 Population 2024</h3>
+<h3>
+⚠ Land Filling
+</h3>
 
-      <p>
-        The application contains a 2024 population-density
-        grid and a separate 2024 GND-level population layer.
-      </p>
+<p>
+Reported and suspected land-filling locations
+are displayed separately as point locations.
+</p>
 
-    </div>
+</div>
 
-  </div>
+
+<div class="theme-box orange">
+
+<h3>
+👥 Population 2024
+</h3>
+
+<p>
+The GND-level population_2024.geojson is used
+for GND population information and GND
+administrative boundaries.
+</p>
+
+</div>
+
+
+<div class="theme-box">
+
+<h3>
+📊 Population Density 2024
+</h3>
+
+<p>
+The 1000 m population-density grid is shown
+using a graduated yellow-to-orange colour ramp.
+</p>
+
+</div>
+
+
+</div>
 
 </div>
 
@@ -480,238 +538,288 @@ th {
 
 
 <!-- =====================================================
-     MAP TAB
+MAP
 ===================================================== -->
 
-<section id="mapTab" class="tab">
+<section
+id="mapTab"
+class="tab">
 
 <div class="container">
 
-  <div id="loadStatus">
-    Loading GeoJSON layers...
-  </div>
+<div
+id="loadStatus"
+class="status">
 
-  <div style="position:relative;">
+Loading spatial layers...
 
-    <div id="filterPanel" class="map-panel">
+</div>
 
-      <h3>Map Controls</h3>
 
-      <!-- Administrative filters -->
+<div class="map-wrapper">
 
-      <label>District</label>
 
-      <select id="districtFilter">
-        <option value="">All Districts</option>
-      </select>
+<!-- CONTROL PANEL -->
 
+<div class="control-panel">
 
-      <label>DSD</label>
+<h3>
+Map Controls
+</h3>
 
-      <select id="dsdFilter">
-        <option value="">All DSDs</option>
-      </select>
 
+<label class="title">
+District
+</label>
 
-      <label>GND</label>
+<select id="districtFilter">
 
-      <select id="gndFilter">
-        <option value="">All GNDs</option>
-      </select>
+<option value="">
+Select District
+</option>
 
+</select>
 
-      <!-- Thematic -->
 
-      <div class="layer-group">
+<label class="title">
+DSD
+</label>
 
-        <strong>Thematic Layers</strong>
+<select id="dsdFilter">
 
-        <label class="layer-check">
-          <input
-            type="checkbox"
-            id="abandonedCheck"
-            checked
-            onchange="toggleLayer('abandoned')"
-          >
-          Abandoned Paddy Lands
-        </label>
+<option value="">
+Select DSD
+</option>
 
+</select>
 
-        <label class="layer-check">
 
-          <input
-            type="checkbox"
-            id="paddyCheck"
-            onchange="toggleLayer('paddy')"
-          >
+<label class="title">
+GND
+</label>
 
-          Paddy Land
+<select id="gndFilter">
 
-        </label>
+<option value="">
+Select GND
+</option>
 
+</select>
 
-        <label class="layer-check">
 
-          <input
-            type="checkbox"
-            id="populationCheck"
-            onchange="toggleLayer('population')"
-          >
+<div class="layer-group">
 
-          Population Density 2024
+<div class="group-title">
+Main Themes
+</div>
 
-        </label>
 
+<label class="check">
 
-        <label class="layer-check">
+<input
+type="checkbox"
+id="abandonedCheck"
+checked
+onchange="toggleLayer('abandoned')">
 
-          <input
-            type="checkbox"
-            id="gndPopulationCheck"
-            onchange="toggleLayer('gndPopulation')"
-          >
+Abandoned Paddy – DSD Rate
 
-          GND Population 2024
+</label>
 
-        </label>
 
-      </div>
+<label class="check">
 
+<input
+type="checkbox"
+id="paddyCheck"
+onchange="toggleLayer('paddy')">
 
-      <!-- Transport -->
+Paddy Land
 
-      <div class="layer-group">
+</label>
 
-        <strong>Transport</strong>
 
-        <label class="layer-check">
+<label class="check">
 
-          <input
-            type="checkbox"
-            id="roadsACheck"
-            onchange="toggleLayer('roadsA')"
-          >
+<input
+type="checkbox"
+id="landFillingCheck"
+checked
+onchange="toggleLayer('landFilling')">
 
-          A-Class Roads
+Reported / Suspected Land Filling
 
-        </label>
+</label>
 
+</div>
 
-        <label class="layer-check">
 
-          <input
-            type="checkbox"
-            id="roadsBCheck"
-            onchange="toggleLayer('roadsB')"
-          >
+<div class="layer-group">
 
-          B-Class Roads
+<div class="group-title">
+Population
+</div>
 
-        </label>
 
+<label class="check">
 
-        <label class="layer-check">
+<input
+type="checkbox"
+id="populationCheck"
+onchange="toggleLayer('population')">
 
-          <input
-            type="checkbox"
-            id="expresswaysCheck"
-            onchange="toggleLayer('expressways')"
-          >
+Population Density 2024
 
-          Expressways
+</label>
 
-        </label>
 
+<label class="check">
 
-        <label class="layer-check">
+<input
+type="checkbox"
+id="gndPopulationCheck"
+onchange="toggleLayer('gndPopulation')">
 
-          <input
-            type="checkbox"
-            id="riversCheck"
-            onchange="toggleLayer('rivers')"
-          >
+GND Population 2024
 
-          Rivers
+</label>
 
-        </label>
+</div>
 
-      </div>
 
+<div class="layer-group">
 
-      <!-- Administrative -->
+<div class="group-title">
+Transport
+</div>
 
-      <div class="layer-group">
 
-        <strong>Administrative</strong>
+<label class="check">
 
-        <label class="layer-check">
+<input
+type="checkbox"
+id="roadsACheck"
+onchange="toggleLayer('roadsA')">
 
-          <input
-            type="checkbox"
-            id="provinceCheck"
-            checked
-            onchange="toggleLayer('province')"
-          >
+A-Class Roads
 
-          Western Province
+</label>
 
-        </label>
 
+<label class="check">
 
-        <label class="layer-check">
+<input
+type="checkbox"
+id="roadsBCheck"
+onchange="toggleLayer('roadsB')">
 
-          <input
-            type="checkbox"
-            id="districtsCheck"
-            onchange="toggleLayer('districts')"
-          >
+B-Class Roads
 
-          Districts
+</label>
 
-        </label>
 
+<label class="check">
 
-        <label class="layer-check">
+<input
+type="checkbox"
+id="expresswaysCheck"
+onchange="toggleLayer('expressways')">
 
-          <input
-            type="checkbox"
-            id="dsdCheck"
-            onchange="toggleLayer('dsd')"
-          >
+Expressways
 
-          DSD Boundaries
+</label>
 
-        </label>
 
-      </div>
+<label class="check">
 
+<input
+type="checkbox"
+id="riversCheck"
+onchange="toggleLayer('rivers')">
 
-      <!-- Land filling -->
+Rivers
 
-      <div class="layer-group">
+</label>
 
-        <strong>Land Filling</strong>
+</div>
 
-        <label class="layer-check">
 
-          <input
-            type="checkbox"
-            id="landFillingCheck"
-            onchange="toggleLayer('landFilling')"
-          >
+<div class="layer-group">
 
-          Reported / Suspected Land Filling
+<div class="group-title">
+Administrative Boundaries
+</div>
 
-        </label>
 
-      </div>
+<label class="check">
 
-    </div>
+<input
+type="checkbox"
+id="provinceCheck"
+checked
+onchange="toggleLayer('province')">
 
+Western Province
 
-    <div id="map"></div>
+</label>
 
-  </div>
+
+<label class="check">
+
+<input
+type="checkbox"
+id="districtsCheck"
+onchange="toggleLayer('districts')">
+
+Districts
+
+</label>
+
+
+<label class="check">
+
+<input
+type="checkbox"
+id="dsdCheck"
+onchange="toggleLayer('dsd')">
+
+DSD Boundaries
+
+</label>
+
+
+<label class="check">
+
+<input
+type="checkbox"
+id="gndBoundariesCheck"
+onchange="toggleLayer('gndBoundaries')">
+
+GND Boundaries
+
+</label>
+
+</div>
+
+
+<div class="layer-group">
+
+<button
+class="btn grey"
+onclick="resetFilters()">
+
+Reset Filters
+
+</button>
+
+</div>
+
+</div>
+
+
+<div id="map"></div>
+
+</div>
 
 </div>
 
@@ -719,36 +827,268 @@ th {
 
 
 <!-- =====================================================
-     REPORT TAB
+COMMUNITY
 ===================================================== -->
 
-<section id="reportTab" class="tab">
+<section
+id="communityTab"
+class="tab">
 
 <div class="container">
 
-  <div class="card">
 
-    <h2>Report a Location</h2>
+<div class="card">
 
-    <p>
-      Community members can report abandoned paddy land
-      or suspected land filling.
-    </p>
+<h2>
+Report a Location & Community Engagement
+</h2>
 
-    <p>
-      The report can include location information,
-      observation date, description and optional coordinates.
-    </p>
+<p>
+Select the location directly from the map and
+then open the community reporting form.
+</p>
 
-    <a
-      class="main-button"
-      href="https://forms.gle/XU44iUGBJVuhWHVR9"
-      target="_blank"
-    >
-      Open Community Reporting Form
-    </a>
 
-  </div>
+<div class="notice">
+
+<b>Step 1:</b>
+Click "Select Location on Map".
+
+<br><br>
+
+<b>Step 2:</b>
+Click the required location on the map.
+
+<br><br>
+
+<b>Step 3:</b>
+The latitude and longitude will be captured.
+
+<br><br>
+
+<b>Step 4:</b>
+Open the Google Form and complete the
+remaining information.
+
+</div>
+
+
+<button
+class="btn"
+onclick="startLocationSelection()">
+
+Select Location on Map
+
+</button>
+
+
+<button
+class="btn grey"
+onclick="useMyLocation()">
+
+Use My Current Location
+
+</button>
+
+
+<div class="location-box">
+
+<b>
+Selected Location
+</b>
+
+<br><br>
+
+Latitude:
+<span id="selectedLat">
+Not selected
+</span>
+
+<br>
+
+Longitude:
+<span id="selectedLng">
+Not selected
+</span>
+
+<br><br>
+
+<span
+id="locationMessage"
+class="small">
+
+No location selected.
+
+</span>
+
+</div>
+
+
+<button
+class="btn orange"
+onclick="openGoogleForm()">
+
+Open Google Form with Location
+
+</button>
+
+
+<p class="small">
+
+The code is prepared for Google Forms pre-filling.
+The latitude and longitude question entry IDs
+must be inserted into the two variables in the
+JavaScript section for completely automatic
+pre-filling.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Community Reporting Questions
+</h3>
+
+<ol>
+
+<li>
+What are you reporting?
+</li>
+
+<li>
+Nearest village, road or landmark
+</li>
+
+<li>
+GN Division, if known
+</li>
+
+<li>
+Date observed
+</li>
+
+<li>
+What did you observe?
+</li>
+
+<li>
+How long has the land been unused or filled?
+</li>
+
+<li>
+Latitude and longitude
+</li>
+
+<li>
+Photo evidence
+</li>
+
+</ol>
+
+
+<a
+class="btn"
+href="https://forms.gle/XU44iUGBJVuhWHVR9"
+target="_blank">
+
+Open Google Form
+
+</a>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Demo Land-Filling Locations
+</h3>
+
+<p class="small">
+
+These are DEMO locations only for testing
+the Web-GIS. They must not be presented as
+verified land-filling locations.
+
+</p>
+
+
+<table>
+
+<tr>
+
+<th>
+Type
+</th>
+
+<th>
+Area
+</th>
+
+<th>
+Status
+</th>
+
+</tr>
+
+
+<tr>
+
+<td>
+Suspected Land Filling
+</td>
+
+<td>
+Piliyandala
+</td>
+
+<td>
+Demo
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Reported Land Filling
+</td>
+
+<td>
+Kesbewa
+</td>
+
+<td>
+Demo
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Suspected Land Filling
+</td>
+
+<td>
+Homagama
+</td>
+
+<td>
+Demo
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
 
 </div>
 
@@ -756,349 +1096,543 @@ th {
 
 
 <!-- =====================================================
-     COMMUNITY DATA
+METHODOLOGY
 ===================================================== -->
 
-<section id="communityTab" class="tab">
+<section
+id="methodTab"
+class="tab">
 
 <div class="container">
 
-  <div class="card">
 
-    <h2>Community Engagement</h2>
+<div class="card">
 
-    <p>
-      Community participation can provide local information
-      about abandoned paddy lands and suspected land filling.
-    </p>
+<h2>
+Data & Methodology
+</h2>
 
-    <h3>Information collected through the reporting form</h3>
 
-    <ol>
+<table>
 
-      <li>Reporting type</li>
+<tr>
 
-      <li>Nearest village, road or landmark</li>
+<th>
+Dataset
+</th>
 
-      <li>GN Division, if known</li>
+<th>
+File
+</th>
 
-      <li>Date of observation</li>
+<th>
+Purpose
+</th>
 
-      <li>Description of the observation</li>
+</tr>
 
-      <li>Duration of land being unused or filled</li>
 
-      <li>Optional latitude and longitude</li>
+<tr>
 
-      <li>Optional photo evidence</li>
+<td>
+Abandoned Paddy Grid
+</td>
 
-    </ol>
+<td>
+abandoned_paddy.geojson
+</td>
 
-    <p>
-      Submitted responses can be connected to a Google
-      Sheets response sheet for further analysis.
-    </p>
+<td>
+DSD-wise abandoned paddy aggregation
+</td>
 
-    <a
-      class="main-button"
-      href="https://forms.gle/XU44iUGBJVuhWHVR9"
-      target="_blank"
-    >
-      Submit a Report
-    </a>
+</tr>
 
-  </div>
+
+<tr>
+
+<td>
+Paddy Grid
+</td>
+
+<td>
+paddy_grid.geojson
+</td>
+
+<td>
+Paddy area and paddy-only grid visualization
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Population Density 2024
+</td>
+
+<td>
+population_density_2024.geojson
+</td>
+
+<td>
+Population density grid visualization
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+GND Population 2024
+</td>
+
+<td>
+population_2024.geojson
+</td>
+
+<td>
+GND population and GND boundaries
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Districts
+</td>
+
+<td>
+districts.geojson
+</td>
+
+<td>
+District boundaries
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+DSD Boundaries
+</td>
+
+<td>
+dsd_boundaries.geojson
+</td>
+
+<td>
+DSD boundaries and DSD-wise analysis
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Roads
+</td>
+
+<td>
+A_class_roads.geojson
+</td>
+
+<td>
+A-Class road network
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Roads
+</td>
+
+<td>
+B_class_roads.geojson
+</td>
+
+<td>
+B-Class road network
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Expressways
+</td>
+
+<td>
+expresssways.geojson
+</td>
+
+<td>
+Expressway network
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Rivers
+</td>
+
+<td>
+rivers.geojson
+</td>
+
+<td>
+River network
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+DSD-wise Abandonment Rate
+</h3>
+
+<p>
+
+The abandoned paddy dataset is grid-based.
+Therefore, the application first identifies
+the DSD containing each abandoned grid.
+
+</p>
+
+<p>
+
+The abandoned paddy areas of all grids within
+each DSD are summed.
+
+</p>
+
+<p>
+
+The paddy areas of the corresponding paddy
+grid cells within each DSD are also summed.
+
+</p>
+
+<p>
+
+<b>
+
+DSD Abandonment Rate (%) =
+
+Σ Abandoned Paddy Area ÷
+Σ Paddy Area × 100
+
+</b>
+
+</p>
+
+<p>
+
+The final percentage is displayed using a
+green sequential colour ramp.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Important Fields
+</h3>
+
+<table>
+
+<tr>
+
+<th>
+Dataset
+</th>
+
+<th>
+Field
+</th>
+
+</tr>
+
+
+<tr>
+
+<td>
+Abandoned Paddy
+</td>
+
+<td>
+New paddy
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Paddy Grid
+</td>
+
+<td>
+Area_ha
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Population Density
+</td>
+
+<td>
+pop_densit
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+GND Population
+</td>
+
+<td>
+Automatically detected
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Limitations
+</h3>
+
+<ul>
+
+<li>
+The GND population layer is also used
+to represent GND boundaries.
+</li>
+
+<li>
+Demo land-filling points are only for
+testing and presentation.
+</li>
+
+<li>
+DSD-wise abandonment results depend on
+the spatial correspondence of the
+grid and DSD datasets.
+</li>
+
+</ul>
+
+</div>
+
 
 </div>
 
 </section>
 
-
-<!-- =====================================================
-     METHODOLOGY
-===================================================== -->
-
-<section id="methodTab" class="tab">
-
-<div class="container">
-
-  <div class="card">
-
-    <h2>Data & Methodology</h2>
-
-    <p>
-      The Web-GIS integrates spatial datasets representing
-      paddy agriculture, population, transportation,
-      administrative boundaries and rivers.
-    </p>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>Spatial Data Layers</h3>
-
-    <table>
-
-      <tr>
-        <th>Layer</th>
-        <th>Purpose</th>
-      </tr>
-
-      <tr>
-        <td>Abandoned Paddy Lands</td>
-        <td>Calculate and visualize abandonment rate</td>
-      </tr>
-
-      <tr>
-        <td>Paddy Land</td>
-        <td>Total paddy area</td>
-      </tr>
-
-      <tr>
-        <td>Population Density 2024</td>
-        <td>1000 m population-density grid</td>
-      </tr>
-
-      <tr>
-        <td>Population 2024</td>
-        <td>GND-level population information</td>
-      </tr>
-
-      <tr>
-        <td>Western Province</td>
-        <td>Study area boundary</td>
-      </tr>
-
-      <tr>
-        <td>Districts</td>
-        <td>District-level administrative boundaries</td>
-      </tr>
-
-      <tr>
-        <td>DSD Boundaries</td>
-        <td>Divisional Secretariat boundaries</td>
-      </tr>
-
-      <tr>
-        <td>A-Class Roads</td>
-        <td>Major road network</td>
-      </tr>
-
-      <tr>
-        <td>B-Class Roads</td>
-        <td>Secondary road network</td>
-      </tr>
-
-      <tr>
-        <td>Expressways</td>
-        <td>Expressway network</td>
-      </tr>
-
-      <tr>
-        <td>Rivers</td>
-        <td>Major river network</td>
-      </tr>
-
-    </table>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>Abandonment Rate Calculation</h3>
-
-    <p>
-      The abandonment rate is calculated for each grid
-      using the abandoned paddy area and total paddy area.
-    </p>
-
-    <p>
-      <b>
-      Abandonment Rate (%) =
-      (Abandoned Paddy Area / Total Paddy Area) × 100
-      </b>
-    </p>
-
-    <p>
-      The resulting percentage is represented using a
-      green sequential colour ramp.
-    </p>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>Important Data Fields</h3>
-
-    <table>
-
-      <tr>
-        <th>Dataset</th>
-        <th>Field</th>
-      </tr>
-
-      <tr>
-        <td>Abandoned Paddy</td>
-        <td>New paddy</td>
-      </tr>
-
-      <tr>
-        <td>Paddy Grid</td>
-        <td>Area_ha</td>
-      </tr>
-
-      <tr>
-        <td>Population Density Grid</td>
-        <td>pop_densit</td>
-      </tr>
-
-      <tr>
-        <td>Population 2024 GND</td>
-        <td>Detected automatically from GeoJSON attributes</td>
-      </tr>
-
-    </table>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>Limitations</h3>
-
-    <ul>
-
-      <li>
-        GND boundaries are represented using the
-        population_2024.geojson dataset rather than the
-        large standalone GND boundary file.
-      </li>
-
-      <li>
-        Community-reported locations require verification
-        before being treated as confirmed land-filling sites.
-      </li>
-
-      <li>
-        The abandonment rate depends on the spatial
-        correspondence between the paddy and abandoned-paddy
-        datasets.
-      </li>
-
-    </ul>
-
-  </div>
-
-</div>
-
-</section>
 
 
 <script>
 
-/* =====================================================
-   FILE PATHS
-===================================================== */
+
+/* =========================================================
+FILE PATHS
+========================================================= */
 
 const FILES = {
 
-  abandoned:
-    "./data/abandoned_paddy.geojson",
+abandoned:
+"./data/abandoned_paddy.geojson",
 
-  paddy:
-    "./data/paddy_grid.geojson",
+paddy:
+"./data/paddy_grid.geojson",
 
-  population:
-    "./data/population_density_2024.geojson",
+population:
+"./data/population_density_2024.geojson",
 
-  gndPopulation:
-    "./data/population_2024.geojson",
+gndPopulation:
+"./data/population_2024.geojson",
 
-  province:
-    "./data/western_province.geojson",
+province:
+"./data/western_province.geojson",
 
-  districts:
-    "./data/districts.geojson",
+districts:
+"./data/districts.geojson",
 
-  dsd:
-    "./data/dsd_boundaries.geojson",
+dsd:
+"./data/dsd_boundaries.geojson",
 
-  roadsA:
-    "./data/A_class_roads.geojson",
+/*
+IMPORTANT:
+The same population_2024 layer is used
+for GND boundaries.
+*/
 
-  roadsB:
-    "./data/B_class_roads.geojson",
+gndBoundaries:
+"./data/population_2024.geojson",
 
-  expressways:
-    "./data/expresssways.geojson",
+roadsA:
+"./data/A_class_roads.geojson",
 
-  rivers:
-    "./data/rivers.geojson"
+roadsB:
+"./data/B_class_roads.geojson",
+
+expressways:
+"./data/expresssways.geojson",
+
+rivers:
+"./data/rivers.geojson"
 
 };
 
 
-/* =====================================================
-   IMPORTANT DATA FIELDS
-===================================================== */
+/* =========================================================
+GOOGLE FORM
+========================================================= */
+
+const GOOGLE_FORM_URL =
+"https://forms.gle/XU44iUGBJVuhWHVR9";
+
+
+/*
+
+IMPORTANT:
+
+To automatically insert selected latitude
+and longitude into Google Forms, we need
+the entry IDs of the two questions.
+
+Example:
+
+entry.123456789
+
+Put the actual IDs here later.
+
+*/
+
+const LAT_ENTRY = "";
+
+const LNG_ENTRY = "";
+
+
+/* =========================================================
+DATA FIELDS
+========================================================= */
 
 const FIELDS = {
 
-  abandonedHa: "New paddy",
+abandonedHa:
+"New paddy",
 
-  paddyHa: "Area_ha",
+paddyHa:
+"Area_ha",
 
-  populationDensity: "pop_densit"
+populationDensity:
+"pop_densit"
 
 };
 
 
-/* =====================================================
-   MAP INITIALIZATION
-===================================================== */
+/* =========================================================
+MAP
+========================================================= */
 
-const map = L.map("map", {
+const map =
+L.map("map",{
 
-  center: [7.05, 80.05],
+center:
+[7.05,80.05],
 
-  zoom: 9
+zoom:9
 
 });
 
 
-/* =====================================================
-   BASEMAPS
-===================================================== */
+/* =========================================================
+BASEMAPS
+========================================================= */
 
-const osm = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution: "&copy; OpenStreetMap contributors"
-  }
+const osm =
+L.tileLayer(
+
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+{
+attribution:
+"&copy; OpenStreetMap contributors"
+}
+
 );
 
 
-const satellite = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  {
-    attribution: "Esri"
-  }
+const satellite =
+L.tileLayer(
+
+"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+
+{
+attribution:
+"Esri"
+}
+
 );
 
 
-const hybrid = L.layerGroup([
+const labels =
+L.tileLayer(
 
-  L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-  ),
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
-  L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-  )
+{
+opacity:.65
+}
+
+);
+
+
+const hybrid =
+L.layerGroup([
+
+satellite,
+
+labels
 
 ]);
 
@@ -1108,1923 +1642,2962 @@ osm.addTo(map);
 
 L.control.layers({
 
-  "OpenStreetMap": osm,
+"OpenStreetMap":
+osm,
 
-  "Satellite": satellite,
+"Satellite":
+satellite,
 
-  "Satellite + Labels": hybrid
+"Satellite + Labels":
+hybrid
 
 }).addTo(map);
 
 
-/* =====================================================
-   LAYER STORAGE
-===================================================== */
+/* =========================================================
+LAYERS
+========================================================= */
 
-const layers = {
-
-  abandoned: null,
-
-  paddy: null,
-
-  population: null,
-
-  gndPopulation: null,
-
-  province: null,
-
-  districts: null,
-
-  dsd: null,
-
-  roadsA: null,
-
-  roadsB: null,
-
-  expressways: null,
-
-  rivers: null,
-
-  landFilling: null
-
-};
+const layers = {};
 
 
-/* =====================================================
-   RAW DATA STORAGE
-===================================================== */
-
-const rawData = {
-
-  abandoned: null,
-
-  paddy: null,
-
-  population: null,
-
-  gndPopulation: null,
-
-  province: null,
-
-  districts: null,
-
-  dsd: null
-
-};
+const raw = {};
 
 
-/* =====================================================
-   ABANDONMENT COLOUR RAMP
-===================================================== */
+let populationBreaks =
+[0,0,0,0];
 
-function abandonmentColor(rate) {
 
-  if (rate === null || isNaN(rate)) {
+let selectedMarker =
+null;
 
-    return "#bdbdbd";
 
-  }
+let selectingLocation =
+false;
 
-  if (rate <= 10) {
 
-    return "#edf8e9";
+/* =========================================================
+DEMO LAND FILLING DATA
+========================================================= */
 
-  }
+const DEMO_FILLING = [
 
-  if (rate <= 25) {
+{
 
-    return "#bae4b3";
+lat:6.7942,
 
-  }
+lng:80.0015,
 
-  if (rate <= 50) {
+type:
+"Suspected land filling",
 
-    return "#74c476";
+place:
+"Piliyandala area"
 
-  }
+},
 
-  if (rate <= 75) {
+{
 
-    return "#31a354";
+lat:6.7705,
 
-  }
+lng:80.0255,
 
-  return "#006d2c";
+type:
+"Reported land filling",
+
+place:
+"Kesbewa area"
+
+},
+
+{
+
+lat:6.8520,
+
+lng:80.0030,
+
+type:
+"Suspected land filling",
+
+place:
+"Homagama area"
+
+}
+
+];
+
+
+/* =========================================================
+HELPER
+========================================================= */
+
+function loadJSON(url){
+
+return fetch(url)
+
+.then(response=>{
+
+if(!response.ok){
+
+throw new Error(
+"HTTP "+
+response.status+
+" - "+
+url
+);
+
+}
+
+return response.json();
+
+});
 
 }
 
 
-/* =====================================================
-   POPULATION DENSITY COLOUR RAMP
-===================================================== */
+function numberValue(value){
 
-function populationColor(value, breaks) {
+const n =
+Number(value);
 
-  if (value === null || isNaN(value)) {
-
-    return "#d9d9d9";
-
-  }
-
-  if (value <= breaks[0]) {
-
-    return "#fff7bc";
-
-  }
-
-  if (value <= breaks[1]) {
-
-    return "#fec44f";
-
-  }
-
-  if (value <= breaks[2]) {
-
-    return "#fe9929";
-
-  }
-
-  if (value <= breaks[3]) {
-
-    return "#ec7014";
-
-  }
-
-  return "#cc4c02";
+return isFinite(n)
+? n
+: null;
 
 }
 
 
-/* =====================================================
-   CALCULATE QUANTILE BREAKS
-===================================================== */
+function uniqueSorted(values){
 
-function calculateBreaks(values) {
+return [
 
-  values = values
-    .filter(v => v !== null && !isNaN(v))
-    .sort((a,b) => a-b);
+...new Set(
 
-  if (values.length === 0) {
+values
 
-    return [0,0,0,0];
+.filter(
+v=>
+v!==null &&
+v!==undefined &&
+String(v).trim()!==""
+)
 
-  }
+.map(String)
 
-  function quantile(q) {
+)
 
-    const index = (values.length - 1) * q;
-
-    const lower = Math.floor(index);
-
-    const upper = Math.ceil(index);
-
-    if (lower === upper) {
-
-      return values[lower];
-
-    }
-
-    return values[lower] +
-      (values[upper] - values[lower]) *
-      (index - lower);
-
-  }
-
-  return [
-
-    quantile(0.20),
-
-    quantile(0.40),
-
-    quantile(0.60),
-
-    quantile(0.80)
-
-  ];
+].sort();
 
 }
 
 
-/* =====================================================
-   POPULATION BREAKS
-===================================================== */
+/* =========================================================
+FIELD DETECTION
+========================================================= */
 
-let populationBreaks = [0,0,0,0];
+function findField(
+properties,
+candidates
+){
+
+if(!properties)
+return null;
 
 
-/* =====================================================
-   FIELD DETECTION
-===================================================== */
+const keys =
+Object.keys(properties);
 
-function findField(properties, candidates) {
 
-  if (!properties) return null;
+for(
+const candidate
+of candidates
+){
 
-  const keys = Object.keys(properties);
+const exact =
+keys.find(
+k=>k===candidate
+);
 
-  for (const candidate of candidates) {
-
-    const exact = keys.find(
-      k => k === candidate
-    );
-
-    if (exact) return exact;
-
-  }
-
-  for (const candidate of candidates) {
-
-    const found = keys.find(
-      k =>
-        k.toLowerCase() ===
-        candidate.toLowerCase()
-    );
-
-    if (found) return found;
-
-  }
-
-  return null;
+if(exact)
+return exact;
 
 }
 
 
-/* =====================================================
-   ADMINISTRATIVE FIELD NAMES
-===================================================== */
+for(
+const candidate
+of candidates
+){
+
+const found =
+keys.find(
+
+k=>
+k.toLowerCase()
+===
+candidate.toLowerCase()
+
+);
+
+if(found)
+return found;
+
+}
+
+
+return null;
+
+}
+
 
 const ADMIN_FIELDS = {
 
-  district: [
-    "district",
-    "district_n",
-    "district_name",
-    "DISTRICT",
-    "DIST_NAME",
-    "District",
-    "D_NAME"
-  ],
+district:[
 
-  dsd: [
-    "dsd",
-    "dsd_name",
-    "ds_name",
-    "DSD",
-    "DSD_NAME",
-    "Divisional_Secretariat",
-    "Divisional Secretariat"
-  ],
+"district",
+"district_n",
+"district_name",
+"DISTRICT",
+"DIST_NAME",
+"District",
+"D_NAME"
 
-  gnd: [
-    "gnd",
-    "gnd_name",
-    "gn_name",
-    "GN_NAME",
-    "GND_NAME",
-    "GN_Division",
-    "GN Division"
-  ],
+],
 
-  population: [
-    "population",
-    "population_2024",
-    "pop_2024",
-    "pop",
-    "POPULATION",
-    "Population",
-    "POP_2024"
-  ]
+dsd:[
+
+"dsd",
+"dsd_name",
+"ds_name",
+"DSD",
+"DSD_NAME",
+"Divisional_Secretariat",
+"Divisional Secretariat"
+
+],
+
+gnd:[
+
+"gnd",
+"gnd_name",
+"gn_name",
+"GN_NAME",
+"GND_NAME",
+"GN_Division",
+"GN Division"
+
+],
+
+population:[
+
+"population",
+"population_2024",
+"pop_2024",
+"pop",
+"POPULATION",
+"Population",
+"POP_2024"
+
+]
 
 };
 
-
-/* =====================================================
-   DETECTED FIELDS
-===================================================== */
 
 let detectedFields = {
 
-  district: null,
+district:null,
 
-  dsd: null,
+dsd:null,
 
-  gnd: null,
+gnd:null,
 
-  population: null
+population:null
 
 };
 
 
-/* =====================================================
-   LOAD GEOJSON
-===================================================== */
-
-async function loadGeoJSON(url) {
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-
-    throw new Error(
-      "HTTP " + response.status
-    );
-
-  }
-
-  return await response.json();
-
-}
+/* =========================================================
+COLOUR RAMPS
+========================================================= */
 
 
-/* =====================================================
-   UPDATE STATUS
-===================================================== */
+/* ABANDONMENT */
 
-function updateStatus(text, good=false) {
+function abandonmentColor(rate){
 
-  const box = document.getElementById(
-    "loadStatus"
-  );
+if(
+rate===null ||
+isNaN(rate)
+)
+return "#d9d9d9";
 
-  box.innerHTML = text;
 
-  if (good) {
+if(rate<=10)
+return "#edf8e9";
 
-    box.style.background = "#e8f5e9";
 
-    box.style.borderLeftColor = "#2e7d32";
+if(rate<=25)
+return "#bae4b3";
 
-  }
+
+if(rate<=50)
+return "#74c476";
+
+
+if(rate<=75)
+return "#31a354";
+
+
+return "#006d2c";
 
 }
 
 
-/* =====================================================
-   ABANDONED POPUP
-===================================================== */
+/* POPULATION */
 
-function abandonedPopup(properties) {
+function populationColor(value){
 
-  const abandoned = Number(
-    properties[FIELDS.abandonedHa]
-  );
+if(
+value===null ||
+isNaN(value)
+)
+return "#d9d9d9";
 
-  let paddy = null;
 
-  if (
-    properties.totalPaddyHa !== undefined
-  ) {
+if(
+value<=populationBreaks[0]
+)
+return "#fff7bc";
 
-    paddy = Number(
-      properties.totalPaddyHa
-    );
 
-  }
+if(
+value<=populationBreaks[1]
+)
+return "#fec44f";
 
-  let rate = null;
 
-  if (
-    paddy !== null &&
-    !isNaN(paddy) &&
-    paddy > 0
-  ) {
+if(
+value<=populationBreaks[2]
+)
+return "#fe9929";
 
-    rate = (abandoned / paddy) * 100;
 
-  }
+if(
+value<=populationBreaks[3]
+)
+return "#ec7014";
 
-  let html = "<b>Abandoned Paddy Land</b><br><br>";
 
-  html +=
-    "Abandoned paddy area: " +
-    (isNaN(abandoned)
-      ? "N/A"
-      : abandoned.toFixed(2) + " ha") +
-    "<br>";
-
-  html +=
-    "Total paddy area: " +
-    (paddy === null || isNaN(paddy)
-      ? "N/A"
-      : paddy.toFixed(2) + " ha") +
-    "<br>";
-
-  html +=
-    "<b>Abandonment Rate: " +
-    (rate === null || isNaN(rate)
-      ? "N/A"
-      : rate.toFixed(1) + "%") +
-    "</b>";
-
-  return html;
+return "#cc4c02";
 
 }
 
 
-/* =====================================================
-   CREATE ABANDONED LAYER
-===================================================== */
+/* PADDY */
 
-function createAbandonedLayer(data) {
+function paddyColor(value){
 
-  if (!rawData.paddy) {
-
-    return L.geoJSON(data, {
-
-      style: {
-
-        color: "#2e7d32",
-
-        weight: 1,
-
-        fillColor: "#74c476",
-
-        fillOpacity: 0.65
-
-      },
-
-      onEachFeature: function(feature, layer) {
-
-        layer.bindPopup(
-          abandonedPopup(feature.properties)
-        );
-
-      }
-
-    });
-
-  }
+if(
+value===null ||
+isNaN(value) ||
+value<=0
+)
+return null;
 
 
-  /*
-    Match abandoned grid with paddy grid
-    using polygon centroid.
-  */
-
-  const paddyFeatures =
-    rawData.paddy.features || [];
+if(value<=1)
+return "#ffffcc";
 
 
-  return L.geoJSON(data, {
-
-    style: function(feature) {
-
-      const abandoned =
-        Number(
-          feature.properties[
-            FIELDS.abandonedHa
-          ]
-        );
+if(value<=5)
+return "#c7e9b4";
 
 
-      let totalPaddy = null;
+if(value<=15)
+return "#7fcdbb";
 
 
-      try {
-
-        const centroid =
-          turf.centroid(feature);
+if(value<=30)
+return "#41b6c4";
 
 
-        for (
-          const paddyFeature
-          of paddyFeatures
-        ) {
-
-          if (
-            turf.booleanPointInPolygon(
-              centroid,
-              paddyFeature
-            )
-          ) {
-
-            totalPaddy =
-              Number(
-                paddyFeature.properties[
-                  FIELDS.paddyHa
-                ]
-              );
-
-            break;
-
-          }
-
-        }
-
-      } catch(e) {}
-
-
-      let rate = null;
-
-
-      if (
-        !isNaN(abandoned) &&
-        totalPaddy !== null &&
-        !isNaN(totalPaddy) &&
-        totalPaddy > 0
-      ) {
-
-        rate =
-          (abandoned / totalPaddy) * 100;
-
-      }
-
-
-      feature.properties.totalPaddyHa =
-        totalPaddy;
-
-      feature.properties.abandonmentRate =
-        rate;
-
-
-      return {
-
-        color: "#4d4d4d",
-
-        weight: 0.6,
-
-        fillColor:
-          abandonmentColor(rate),
-
-        fillOpacity: 0.72
-
-      };
-
-    },
-
-
-    onEachFeature: function(feature, layer) {
-
-      layer.bindPopup(
-        abandonedPopup(feature.properties)
-      );
-
-    }
-
-  });
+return "#225ea8";
 
 }
 
 
-/* =====================================================
-   POPULATION DENSITY GRID
-===================================================== */
+/* =========================================================
+QUANTILE BREAKS
+========================================================= */
 
-function createPopulationLayer(data) {
+function calculateBreaks(values){
 
-  const values = [];
+const v =
+values
 
-  data.features.forEach(feature => {
+.filter(
+x=>
+x!==null &&
+!isNaN(x)
+)
 
-    const value = Number(
-      feature.properties[
-        FIELDS.populationDensity
-      ]
-    );
-
-    if (!isNaN(value)) {
-
-      values.push(value);
-
-    }
-
-  });
+.sort(
+(a,b)=>a-b
+);
 
 
-  populationBreaks =
-    calculateBreaks(values);
+if(!v.length)
+return [0,0,0,0];
 
 
-  return L.geoJSON(data, {
+function q(percent){
 
-    style: function(feature) {
-
-      const value = Number(
-        feature.properties[
-          FIELDS.populationDensity
-        ]
-      );
-
-      return {
-
-        color: "#8c510a",
-
-        weight: 0.5,
-
-        fillColor:
-          populationColor(
-            value,
-            populationBreaks
-          ),
-
-        fillOpacity: 0.65
-
-      };
-
-    },
+const index =
+(v.length-1)*percent;
 
 
-    onEachFeature: function(feature, layer) {
-
-      const value =
-        Number(
-          feature.properties[
-            FIELDS.populationDensity
-          ]
-        );
+const lower =
+Math.floor(index);
 
 
-      layer.bindPopup(
+const upper =
+Math.ceil(index);
 
-        "<b>Population Density 2024</b><br><br>" +
 
-        "Population density: " +
+if(
+lower===upper
+)
+return v[lower];
 
-        (
-          isNaN(value)
-            ? "N/A"
-            : value.toFixed(2)
-        ) +
 
-        "<br><br>" +
-
-        "This layer represents the " +
-        "1000 m population-density grid."
-
-      );
-
-    }
-
-  });
+return v[lower]+
+(
+v[upper]-v[lower]
+)*
+(
+index-lower
+);
 
 }
 
 
-/* =====================================================
-   GND POPULATION LAYER
-===================================================== */
+return [
 
-function createGNDPopulationLayer(data) {
+q(.20),
 
-  if (!data.features.length) {
+q(.40),
 
-    return L.geoJSON(data);
+q(.60),
 
-  }
+q(.80)
 
-
-  const sample =
-    data.features[0].properties;
-
-
-  detectedFields.district =
-    findField(
-      sample,
-      ADMIN_FIELDS.district
-    );
-
-
-  detectedFields.dsd =
-    findField(
-      sample,
-      ADMIN_FIELDS.dsd
-    );
-
-
-  detectedFields.gnd =
-    findField(
-      sample,
-      ADMIN_FIELDS.gnd
-    );
-
-
-  detectedFields.population =
-    findField(
-      sample,
-      ADMIN_FIELDS.population
-    );
-
-
-  console.log(
-    "Detected GND fields:",
-    detectedFields
-  );
-
-
-  return L.geoJSON(data, {
-
-    style: {
-
-      color: "#424242",
-
-      weight: 1,
-
-      fillColor: "#ffb74d",
-
-      fillOpacity: 0.20
-
-    },
-
-
-    onEachFeature: function(feature, layer) {
-
-      const p =
-        feature.properties;
-
-
-      const district =
-        detectedFields.district
-          ? p[detectedFields.district]
-          : "N/A";
-
-
-      const dsd =
-        detectedFields.dsd
-          ? p[detectedFields.dsd]
-          : "N/A";
-
-
-      const gnd =
-        detectedFields.gnd
-          ? p[detectedFields.gnd]
-          : "N/A";
-
-
-      const population =
-        detectedFields.population
-          ? p[detectedFields.population]
-          : "N/A";
-
-
-      layer.bindPopup(
-
-        "<b>GND Population 2024</b><br><br>" +
-
-        "<b>District:</b> " +
-        district +
-        "<br>" +
-
-        "<b>DSD:</b> " +
-        dsd +
-        "<br>" +
-
-        "<b>GND:</b> " +
-        gnd +
-        "<br>" +
-
-        "<b>Population 2024:</b> " +
-        population
-
-      );
-
-    }
-
-  });
+];
 
 }
 
 
-/* =====================================================
-   ADMIN BOUNDARIES
-===================================================== */
+/* =========================================================
+CREATE PADDY GRID
+========================================================= */
 
-function createProvinceLayer(data) {
+function createPaddyLayer(){
 
-  return L.geoJSON(data, {
+const features =
+(raw.paddy.features||[])
 
-    style: {
+.filter(feature=>{
 
-      color: "#1b1b1b",
+const value =
+numberValue(
+feature.properties?.[
+FIELDS.paddyHa
+]
+);
 
-      weight: 3,
+return (
+value!==null &&
+value>0
+);
 
-      fill: false
+});
 
-    }
 
-  });
+layers.paddy =
+L.geoJSON(
+
+{
+
+type:
+"FeatureCollection",
+
+features:
+features
+
+},
+
+{
+
+style:
+feature=>{
+
+const value =
+numberValue(
+feature.properties?.[
+FIELDS.paddyHa
+]
+);
+
+
+return {
+
+color:
+"#4f6f52",
+
+weight:
+.45,
+
+fillColor:
+paddyColor(value),
+
+fillOpacity:
+.65
+
+};
+
+},
+
+
+onEachFeature:
+(feature,layer)=>{
+
+const value =
+numberValue(
+feature.properties?.[
+FIELDS.paddyHa
+]
+);
+
+
+layer.bindPopup(
+
+"<b>Paddy Land Grid</b><br><br>"+
+
+"Area: "+
+
+(
+value===null
+?
+"N/A"
+:
+value.toFixed(2)+
+" ha"
+)
+
+);
+
+}
+
+}
+
+);
 
 }
 
 
-function createDistrictLayer(data) {
+/* =========================================================
+POPULATION DENSITY GRID
+========================================================= */
 
-  return L.geoJSON(data, {
+function createPopulationLayer(){
 
-    style: {
+const values =
+(raw.population.features||[])
 
-      color: "#616161",
+.map(
 
-      weight: 1.8,
+feature=>
 
-      fill: false,
+numberValue(
+feature.properties?.[
+FIELDS.populationDensity
+]
 
-      dashArray: "5,5"
+)
 
-    }
+)
 
-  });
+.filter(
+v=>v!==null
+);
+
+
+populationBreaks =
+calculateBreaks(values);
+
+
+layers.population =
+L.geoJSON(
+
+raw.population,
+
+{
+
+style:
+feature=>{
+
+const value =
+numberValue(
+feature.properties?.[
+FIELDS.populationDensity
+]
+);
+
+
+return {
+
+color:
+"#8c510a",
+
+weight:
+.45,
+
+fillColor:
+populationColor(value),
+
+fillOpacity:
+.65
+
+};
+
+},
+
+
+onEachFeature:
+(feature,layer)=>{
+
+const value =
+numberValue(
+feature.properties?.[
+FIELDS.populationDensity
+]
+);
+
+
+layer.bindPopup(
+
+"<b>Population Density 2024</b><br><br>"+
+
+"Population Density: "+
+
+(
+value===null
+?
+"N/A"
+:
+value.toFixed(2)
+)
+
+);
+
+}
+
+}
+
+);
 
 }
 
 
-function createDSDLayer(data) {
+/* =========================================================
+GND POPULATION
+========================================================= */
 
-  return L.geoJSON(data, {
+function createGNDPopulationLayer(){
 
-    style: {
+const first =
+raw.gndPopulation
+.features?.[0]
+?.properties || {};
 
-      color: "#757575",
 
-      weight: 1,
+detectedFields.district =
+findField(
+first,
+ADMIN_FIELDS.district
+);
 
-      fill: false,
 
-      dashArray: "3,5"
+detectedFields.dsd =
+findField(
+first,
+ADMIN_FIELDS.dsd
+);
 
-    }
 
-  });
+detectedFields.gnd =
+findField(
+first,
+ADMIN_FIELDS.gnd
+);
+
+
+detectedFields.population =
+findField(
+first,
+ADMIN_FIELDS.population
+);
+
+
+console.log(
+"Detected fields:",
+detectedFields
+);
+
+
+layers.gndPopulation =
+L.geoJSON(
+
+raw.gndPopulation,
+
+{
+
+style:{
+
+color:
+"#ef8c00",
+
+weight:
+1,
+
+fillColor:
+"#ffb74d",
+
+fillOpacity:
+.16
+
+},
+
+
+onEachFeature:
+(feature,layer)=>{
+
+const p =
+feature.properties || {};
+
+
+const district =
+detectedFields.district
+?
+p[
+detectedFields.district
+]
+:
+"N/A";
+
+
+const dsd =
+detectedFields.dsd
+?
+p[
+detectedFields.dsd
+]
+:
+"N/A";
+
+
+const gnd =
+detectedFields.gnd
+?
+p[
+detectedFields.gnd
+]
+:
+"N/A";
+
+
+const population =
+detectedFields.population
+?
+p[
+detectedFields.population
+]
+:
+"N/A";
+
+
+layer.bindPopup(
+
+"<b>GND Population 2024</b><br><br>"+
+
+"<b>District:</b> "+
+district+
+
+"<br>"+
+
+"<b>DSD:</b> "+
+dsd+
+
+"<br>"+
+
+"<b>GND:</b> "+
+gnd+
+
+"<br>"+
+
+"<b>Population 2024:</b> "+
+population
+
+);
+
+}
+
+}
+
+);
 
 }
 
 
-/* =====================================================
-   ROAD LAYERS
-===================================================== */
+/* =========================================================
+GND BOUNDARY
+========================================================= */
 
-function createRoadLayer(data, color, weight) {
+function createGNDBoundaryLayer(){
 
-  return L.geoJSON(data, {
+layers.gndBoundaries =
 
-    style: {
+L.geoJSON(
 
-      color: color,
+raw.gndPopulation,
 
-      weight: weight,
+{
 
-      opacity: 0.85
+style:{
 
-    }
+color:
+"#6a1b9a",
 
-  });
+weight:
+1,
+
+fill:false,
+
+dashArray:
+"3,4"
+
+}
+
+}
+
+);
 
 }
 
 
-/* =====================================================
-   RIVERS
-===================================================== */
+/* =========================================================
+ADMINISTRATIVE LAYERS
+========================================================= */
 
-function createRiverLayer(data) {
+function createAdminLayers(){
 
-  return L.geoJSON(data, {
+layers.province =
 
-    style: {
+L.geoJSON(
 
-      color: "#1976d2",
+raw.province,
 
-      weight: 1.5,
+{
 
-      opacity: 0.8
+style:{
 
-    }
+color:
+"#212121",
 
-  });
+weight:
+3,
+
+fill:false
+
+}
+
+}
+
+);
+
+
+layers.districts =
+
+L.geoJSON(
+
+raw.districts,
+
+{
+
+style:{
+
+color:
+"#555",
+
+weight:
+1.8,
+
+fill:false,
+
+dashArray:
+"6,5"
+
+}
+
+}
+
+);
+
+
+layers.dsd =
+
+L.geoJSON(
+
+raw.dsd,
+
+{
+
+style:{
+
+color:
+"#777",
+
+weight:
+1,
+
+fill:false,
+
+dashArray:
+"3,5"
+
+}
+
+}
+
+);
+
+
+/* A CLASS = RED */
+
+layers.roadsA =
+
+L.geoJSON(
+
+raw.roadsA,
+
+{
+
+style:{
+
+color:
+"#d32f2f",
+
+weight:
+2.5,
+
+opacity:
+.95
+
+}
+
+}
+
+);
+
+
+/* B CLASS = BLACK */
+
+layers.roadsB =
+
+L.geoJSON(
+
+raw.roadsB,
+
+{
+
+style:{
+
+color:
+"#212121",
+
+weight:
+1.6,
+
+opacity:
+.95
+
+}
+
+}
+
+);
+
+
+/* EXPRESSWAY = DARK RED THICK */
+
+layers.expressways =
+
+L.geoJSON(
+
+raw.expressways,
+
+{
+
+style:{
+
+color:
+"#8b0000",
+
+weight:
+5,
+
+opacity:
+1
+
+}
+
+}
+
+);
+
+
+/* RIVERS */
+
+layers.rivers =
+
+L.geoJSON(
+
+raw.rivers,
+
+{
+
+style:{
+
+color:
+"#1976d2",
+
+weight:
+1.7,
+
+opacity:
+.85
+
+}
+
+}
+
+);
 
 }
 
 
-/* =====================================================
-   LOAD ALL DATA
-===================================================== */
+/* =========================================================
+DSD ABANDONMENT CALCULATION
+========================================================= */
 
-async function loadAllLayers() {
+function createDSDAbandonment(){
 
-  const results = [];
+const dsdFeatures =
+raw.dsd.features || [];
 
-  const tasks = [
 
-    ["abandoned", FILES.abandoned],
+const abandonedFeatures =
+raw.abandoned.features || [];
 
-    ["paddy", FILES.paddy],
 
-    ["population", FILES.population],
+const paddyFeatures =
+raw.paddy.features || [];
 
-    ["gndPopulation", FILES.gndPopulation],
 
-    ["province", FILES.province],
+const statistics = [];
 
-    ["districts", FILES.districts],
 
-    ["dsd", FILES.dsd],
+for(
+let i=0;
+i<dsdFeatures.length;
+i++
+){
 
-    ["roadsA", FILES.roadsA],
+statistics.push({
 
-    ["roadsB", FILES.roadsB],
+abandonedHa:
+0,
 
-    ["expressways", FILES.expressways],
+paddyHa:
+0,
 
-    ["rivers", FILES.rivers]
+abandonedGrids:
+0,
 
-  ];
+paddyGrids:
+0
 
-
-  for (const [name, url] of tasks) {
-
-    try {
-
-      const data =
-        await loadGeoJSON(url);
-
-
-      results.push(
-        name + " ✓"
-      );
-
-
-      if (
-        name === "abandoned" ||
-        name === "paddy" ||
-        name === "population" ||
-        name === "gndPopulation" ||
-        name === "province" ||
-        name === "districts" ||
-        name === "dsd"
-      ) {
-
-        rawData[name] = data;
-
-      }
-
-    }
-
-    catch(error) {
-
-      console.error(
-        name,
-        url,
-        error
-      );
-
-      results.push(
-        name + " ✗"
-      );
-
-    }
-
-  }
-
-
-  /*
-    Create paddy layer first.
-  */
-
-  if (rawData.paddy) {
-
-    layers.paddy =
-      L.geoJSON(
-        rawData.paddy,
-        {
-
-          style: {
-
-            color: "#558b2f",
-
-            weight: 0.5,
-
-            fillColor: "#9ccc65",
-
-            fillOpacity: 0.25
-
-          }
-
-        }
-
-      );
-
-  }
-
-
-  /*
-    Create abandoned layer after paddy
-    so abandonment rate can be calculated.
-  */
-
-  if (rawData.abandoned) {
-
-    layers.abandoned =
-      createAbandonedLayer(
-        rawData.abandoned
-      );
-
-    layers.abandoned.addTo(map);
-
-  }
-
-
-  if (rawData.population) {
-
-    layers.population =
-      createPopulationLayer(
-        rawData.population
-      );
-
-  }
-
-
-  if (rawData.gndPopulation) {
-
-    layers.gndPopulation =
-      createGNDPopulationLayer(
-        rawData.gndPopulation
-      );
-
-  }
-
-
-  if (rawData.province) {
-
-    layers.province =
-      createProvinceLayer(
-        rawData.province
-      );
-
-    layers.province.addTo(map);
-
-  }
-
-
-  if (rawData.districts) {
-
-    layers.districts =
-      createDistrictLayer(
-        rawData.districts
-      );
-
-  }
-
-
-  if (rawData.dsd) {
-
-    layers.dsd =
-      createDSDLayer(
-        rawData.dsd
-      );
-
-  }
-
-
-  /*
-    Roads and rivers.
-  */
-
-  try {
-
-    const data =
-      await loadGeoJSON(
-        FILES.roadsA
-      );
-
-    layers.roadsA =
-      createRoadLayer(
-        data,
-        "#f57c00",
-        2.5
-      );
-
-  } catch(e) {}
-
-
-  try {
-
-    const data =
-      await loadGeoJSON(
-        FILES.roadsB
-      );
-
-    layers.roadsB =
-      createRoadLayer(
-        data,
-        "#ffb300",
-        1.5
-      );
-
-  } catch(e) {}
-
-
-  try {
-
-    const data =
-      await loadGeoJSON(
-        FILES.expressways
-      );
-
-    layers.expressways =
-      createRoadLayer(
-        data,
-        "#d32f2f",
-        3
-      );
-
-  } catch(e) {}
-
-
-  try {
-
-    const data =
-      await loadGeoJSON(
-        FILES.rivers
-      );
-
-    layers.rivers =
-      createRiverLayer(
-        data
-      );
-
-  } catch(e) {}
-
-
-  /*
-    Fit map to Western Province.
-  */
-
-  if (layers.province) {
-
-    try {
-
-      map.fitBounds(
-        layers.province.getBounds(),
-        {
-          padding: [20,20]
-        }
-      );
-
-    } catch(e) {}
-
-  }
-
-
-  /*
-    Setup filters.
-  */
-
-  setupFilters();
-
-
-  updateStatus(
-
-    "GeoJSON loading completed. " +
-    "Check the layer controls to display datasets.",
-
-    true
-
-  );
+});
 
 }
 
 
-/* =====================================================
-   LAYER TOGGLE
-===================================================== */
+/*
+Assign every abandoned grid to
+the DSD containing its centroid.
+*/
 
-function toggleLayer(name) {
+abandonedFeatures.forEach(
+feature=>{
 
-  const layer =
-    layers[name];
+let centroid;
 
-  if (!layer) {
+try{
 
-    return;
+centroid =
+turf.centroid(feature);
 
-  }
+}
 
+catch(e){
 
-  const checkbox =
-    document.getElementById(
-      name + "Check"
-    );
-
-
-  if (
-    checkbox &&
-    checkbox.checked
-  ) {
-
-    layer.addTo(map);
-
-  }
-
-  else {
-
-    map.removeLayer(layer);
-
-  }
+return;
 
 }
 
 
-/* =====================================================
-   FILTER HELPERS
-===================================================== */
+for(
+let i=0;
+i<dsdFeatures.length;
+i++
+){
 
-function getUniqueValues(
-  data,
-  field
-) {
+try{
 
-  if (!data || !field) {
+if(
+turf.booleanPointInPolygon(
+centroid,
+dsdFeatures[i]
+)
+){
 
-    return [];
-
-  }
-
-
-  const values = new Set();
-
-
-  data.features.forEach(feature => {
-
-    const value =
-      feature.properties[field];
-
-    if (
-      value !== undefined &&
-      value !== null &&
-      String(value).trim() !== ""
-    ) {
-
-      values.add(
-        String(value)
-      );
-
-    }
-
-  });
+const value =
+numberValue(
+feature.properties?.[
+FIELDS.abandonedHa
+]
+);
 
 
-  return Array.from(values)
-    .sort();
+if(value!==null){
+
+statistics[i]
+.abandonedHa += value;
+
+statistics[i]
+.abandonedGrids++;
 
 }
 
 
-/* =====================================================
-   POPULATE SELECT
-===================================================== */
+break;
+
+}
+
+}
+catch(e){}
+
+}
+
+});
+
+
+/*
+Assign every paddy grid to
+the DSD containing its centroid.
+*/
+
+paddyFeatures.forEach(
+feature=>{
+
+const area =
+numberValue(
+feature.properties?.[
+FIELDS.paddyHa
+]
+);
+
+
+if(
+area===null ||
+area<=0
+)
+return;
+
+
+let centroid;
+
+try{
+
+centroid =
+turf.centroid(feature);
+
+}
+
+catch(e){
+
+return;
+
+}
+
+
+for(
+let i=0;
+i<dsdFeatures.length;
+i++
+){
+
+try{
+
+if(
+turf.booleanPointInPolygon(
+centroid,
+dsdFeatures[i]
+)
+){
+
+statistics[i]
+.paddyHa += area;
+
+statistics[i]
+.paddyGrids++;
+
+break;
+
+}
+
+}
+catch(e){}
+
+}
+
+});
+
+
+/*
+Attach statistics to DSD features.
+*/
+
+dsdFeatures.forEach(
+(feature,i)=>{
+
+const s =
+statistics[i];
+
+
+const rate =
+s.paddyHa>0
+?
+(
+s.abandonedHa /
+s.paddyHa
+)*100
+:
+null;
+
+
+feature.properties
+.__PW_abandonedHa =
+s.abandonedHa;
+
+
+feature.properties
+.__PW_paddyHa =
+s.paddyHa;
+
+
+feature.properties
+.__PW_abandonedGrids =
+s.abandonedGrids;
+
+
+feature.properties
+.__PW_paddyGrids =
+s.paddyGrids;
+
+
+feature.properties
+.__PW_rate =
+rate;
+
+});
+
+
+/*
+Create DSD choropleth.
+*/
+
+layers.abandoned =
+
+L.geoJSON(
+
+raw.dsd,
+
+{
+
+style:
+feature=>{
+
+const rate =
+feature.properties
+.__PW_rate;
+
+
+return {
+
+color:
+"#355e3b",
+
+weight:
+1.3,
+
+fillColor:
+abandonmentColor(rate),
+
+fillOpacity:
+.72
+
+};
+
+},
+
+
+onEachFeature:
+(feature,layer)=>{
+
+const p =
+feature.properties;
+
+
+const dsdName =
+detectedFields.dsd
+?
+p[
+detectedFields.dsd
+]
+:
+"DSD";
+
+
+const rate =
+p.__PW_rate;
+
+
+layer.bindPopup(
+
+"<b>DSD-wise Abandoned Paddy Analysis</b>"+
+
+"<br><br>"+
+
+"<b>DSD:</b> "+
+dsdName+
+
+"<br>"+
+
+"<b>Abandoned grid cells:</b> "+
+p.__PW_abandonedGrids+
+
+"<br>"+
+
+"<b>Paddy grid cells:</b> "+
+p.__PW_paddyGrids+
+
+"<br>"+
+
+"<b>Abandoned paddy:</b> "+
+p.__PW_abandonedHa.toFixed(2)+
+" ha"+
+
+"<br>"+
+
+"<b>Total paddy:</b> "+
+p.__PW_paddyHa.toFixed(2)+
+" ha"+
+
+"<br><br>"+
+
+"<b>Abandonment Rate:</b> "+
+(
+rate===null
+?
+"N/A"
+:
+rate.toFixed(1)+
+"%"
+)
+
+);
+
+}
+
+}
+
+);
+
+}
+
+
+/* =========================================================
+DEMO LAND FILLING
+========================================================= */
+
+function createLandFilling(){
+
+layers.landFilling =
+L.layerGroup();
+
+
+DEMO_FILLING.forEach(
+item=>{
+
+const marker =
+
+L.circleMarker(
+
+[
+item.lat,
+item.lng
+],
+
+{
+
+radius:
+7,
+
+color:
+"#b71c1c",
+
+weight:
+2,
+
+fillColor:
+"#f44336",
+
+fillOpacity:
+.9
+
+}
+
+);
+
+
+marker.bindPopup(
+
+"<b>Reported / Suspected Land Filling</b>"+
+
+"<br><br>"+
+
+"<b>Location:</b> "+
+item.place+
+
+"<br>"+
+
+"<b>Type:</b> "+
+item.type+
+
+"<br>"+
+
+"<b>Status:</b> DEMO DATA"+
+
+"<br><br>"+
+
+"<span style='color:#b71c1c'>"+
+"Demo point only – replace with verified data."
++
+"</span>"
+
+);
+
+
+marker.addTo(
+layers.landFilling
+);
+
+});
+
+
+layers.landFilling
+.addTo(map);
+
+}
+
+
+/* =========================================================
+LOAD ALL DATA
+========================================================= */
+
+async function loadAll(){
+
+const failed=[];
+
+
+for(
+const [name,url]
+of Object.entries(FILES)
+){
+
+try{
+
+raw[name] =
+await loadJSON(url);
+
+}
+
+catch(error){
+
+console.error(
+name,
+error
+);
+
+failed.push(name);
+
+}
+
+}
+
+
+/* GND population */
+
+if(
+raw.gndPopulation
+){
+
+createGNDPopulationLayer();
+
+createGNDBoundaryLayer();
+
+}
+
+
+/* Paddy */
+
+if(
+raw.paddy
+){
+
+createPaddyLayer();
+
+}
+
+
+/* Population */
+
+if(
+raw.population
+){
+
+createPopulationLayer();
+
+}
+
+
+/* Administrative */
+
+if(
+raw.province &&
+raw.districts &&
+raw.dsd &&
+raw.roadsA &&
+raw.roadsB &&
+raw.expressways &&
+raw.rivers
+){
+
+createAdminLayers();
+
+}
+
+
+/* DSD abandonment */
+
+if(
+raw.dsd &&
+raw.abandoned &&
+raw.paddy
+){
+
+createDSDAbandonment();
+
+}
+
+
+/* Demo filling */
+
+createLandFilling();
+
+
+/* Default layers */
+
+if(
+layers.abandoned
+)
+layers.abandoned.addTo(map);
+
+
+if(
+layers.province
+)
+layers.province.addTo(map);
+
+
+/* Fit province */
+
+if(
+layers.province
+){
+
+try{
+
+map.fitBounds(
+
+layers.province.getBounds(),
+
+{
+padding:
+[20,20]
+}
+
+);
+
+}
+
+catch(e){}
+
+}
+
+
+/* Filters */
+
+setupFilters();
+
+
+/* Status */
+
+if(
+failed.length===0
+){
+
+setStatus(
+"All required GeoJSON layers loaded successfully.",
+true
+);
+
+}
+
+else{
+
+setStatus(
+
+"Some layers could not be loaded: "+
+failed.join(", "),
+
+false
+
+);
+
+}
+
+}
+
+
+/* =========================================================
+TOGGLE LAYERS
+========================================================= */
+
+function toggleLayer(name){
+
+const layer =
+layers[name];
+
+
+if(!layer)
+return;
+
+
+const checkbox =
+document.getElementById(
+name+"Check"
+);
+
+
+if(
+checkbox &&
+checkbox.checked
+){
+
+layer.addTo(map);
+
+}
+
+else{
+
+map.removeLayer(layer);
+
+}
+
+}
+
+
+/* =========================================================
+DROPDOWN
+========================================================= */
 
 function populateSelect(
-  select,
-  values,
-  defaultText
-) {
+id,
+values,
+defaultText
+){
 
-  select.innerHTML =
-    `<option value="">${defaultText}</option>`;
+const select =
+document.getElementById(id);
 
 
-  values.forEach(value => {
+select.innerHTML="";
 
-    const option =
-      document.createElement(
-        "option"
-      );
 
-    option.value = value;
+const first =
+document.createElement(
+"option"
+);
 
-    option.textContent = value;
+first.value="";
 
-    select.appendChild(option);
+first.textContent =
+defaultText;
 
-  });
+select.appendChild(first);
+
+
+uniqueSorted(values)
+.forEach(
+value=>{
+
+const option =
+document.createElement(
+"option"
+);
+
+option.value =
+value;
+
+option.textContent =
+value;
+
+select.appendChild(option);
+
+});
 
 }
 
 
-/* =====================================================
-   FILTER SETUP
-===================================================== */
+/* =========================================================
+FILTER SETUP
+========================================================= */
 
-function setupFilters() {
+function setupFilters(){
 
-  if (!rawData.gndPopulation) {
+if(
+!raw.gndPopulation
+)
+return;
 
-    return;
 
-  }
+const features =
+raw.gndPopulation
+.features || [];
 
 
-  const districtSelect =
-    document.getElementById(
-      "districtFilter"
-    );
+/*
+District dropdown
+*/
 
+populateSelect(
 
-  const dsdSelect =
-    document.getElementById(
-      "dsdFilter"
-    );
+"districtFilter",
 
+detectedFields.district
+?
+features.map(
+f=>
+f.properties[
+detectedFields.district
+]
+)
+:
+[],
 
-  const gndSelect =
-    document.getElementById(
-      "gndFilter"
-    );
+"All Districts"
 
+);
 
-  if (
-    !detectedFields.district ||
-    !detectedFields.dsd ||
-    !detectedFields.gnd
-  ) {
 
-    console.warn(
-      "District / DSD / GND fields could not all be detected."
-    );
+/*
+Initial DSD values
+*/
 
-    return;
+populateSelect(
 
-  }
+"dsdFilter",
 
+detectedFields.dsd
+?
+features.map(
+f=>
+f.properties[
+detectedFields.dsd
+]
+)
+:
+[],
 
-  /*
-    District list.
-  */
+"All DSDs"
 
-  populateSelect(
+);
 
-    districtSelect,
 
-    getUniqueValues(
-      rawData.gndPopulation,
-      detectedFields.district
-    ),
+/*
+Initial GND values
+*/
 
-    "All Districts"
+populateSelect(
 
-  );
+"gndFilter",
 
+detectedFields.gnd
+?
+features.map(
+f=>
+f.properties[
+detectedFields.gnd
+]
+)
+:
+[],
 
-  /*
-    District changed.
-  */
+"All GNDs"
 
-  districtSelect.addEventListener(
-    "change",
-    function() {
 
-      const district =
-        this.value;
+);
 
 
-      let features =
-        rawData.gndPopulation.features;
+/* District */
 
+document.getElementById(
+"districtFilter"
+)
+.onchange =
+function(){
 
-      if (district) {
+const district =
+this.value;
 
-        features =
-          features.filter(
-            feature =>
-              String(
-                feature.properties[
-                  detectedFields.district
-                ]
-              ) === district
-          );
 
-      }
+const selected =
+features.filter(
+feature=>{
 
+if(!district)
+return true;
 
-      const dsdValues =
-        Array.from(
 
-          new Set(
+return (
 
-            features.map(
-              feature =>
-                String(
-                  feature.properties[
-                    detectedFields.dsd
-                  ]
-                )
-            )
+detectedFields.district &&
 
-          )
+String(
+feature.properties[
+detectedFields.district
+]
+)
+===
+district
 
-        ).sort();
+);
 
+});
 
-      populateSelect(
-        dsdSelect,
-        dsdValues,
-        "All DSDs"
-      );
 
+populateSelect(
 
-      populateSelect(
-        gndSelect,
-        [],
-        "All GNDs"
-      );
+"dsdFilter",
 
+detectedFields.dsd
+?
+selected.map(
+f=>
+f.properties[
+detectedFields.dsd
+]
+)
+:
+[],
 
-      applyAdminFilter();
+"All DSDs"
 
-    }
-  );
+);
 
 
-  /*
-    DSD changed.
-  */
+populateSelect(
 
-  dsdSelect.addEventListener(
-    "change",
-    function() {
+"gndFilter",
 
-      const district =
-        districtSelect.value;
+detectedFields.gnd
+?
+selected.map(
+f=>
+f.properties[
+detectedFields.gnd
+]
+)
+:
+[],
 
-      const dsd =
-        this.value;
+"All GNDs"
 
+);
 
-      let features =
-        rawData.gndPopulation.features;
 
+applyAdminFilter();
 
-      if (district) {
+};
 
-        features =
-          features.filter(
-            feature =>
-              String(
-                feature.properties[
-                  detectedFields.district
-                ]
-              ) === district
-          );
 
-      }
+/* DSD */
 
+document.getElementById(
+"dsdFilter"
+)
+.onchange =
+function(){
 
-      if (dsd) {
+const district =
+document.getElementById(
+"districtFilter"
+).value;
 
-        features =
-          features.filter(
-            feature =>
-              String(
-                feature.properties[
-                  detectedFields.dsd
-                ]
-              ) === dsd
-          );
 
-      }
+const dsd =
+this.value;
 
 
-      const gndValues =
-        Array.from(
+const selected =
+features.filter(
+feature=>{
 
-          new Set(
+const p =
+feature.properties;
 
-            features.map(
-              feature =>
-                String(
-                  feature.properties[
-                    detectedFields.gnd
-                  ]
-                )
-            )
 
-          )
+if(
+district &&
+detectedFields.district &&
+String(
+p[
+detectedFields.district
+]
+)
+!==
+district
+)
+return false;
 
-        ).sort();
 
+if(
+dsd &&
+detectedFields.dsd &&
+String(
+p[
+detectedFields.dsd
+]
+)
+!==
+dsd
+)
+return false;
 
-      populateSelect(
-        gndSelect,
-        gndValues,
-        "All GNDs"
-      );
 
+return true;
 
-      applyAdminFilter();
+});
 
-    }
-  );
 
+populateSelect(
 
-  /*
-    GND changed.
-  */
+"gndFilter",
 
-  gndSelect.addEventListener(
-    "change",
-    applyAdminFilter
-  );
+detectedFields.gnd
+?
+selected.map(
+f=>
+f.properties[
+detectedFields.gnd
+]
+)
+:
+[],
+
+"All GNDs"
+
+);
+
+
+applyAdminFilter();
+
+};
+
+
+/* GND */
+
+document.getElementById(
+"gndFilter"
+)
+.onchange =
+applyAdminFilter;
 
 }
 
 
-/* =====================================================
-   ADMIN FILTER
-===================================================== */
+/* =========================================================
+ADMIN FILTER
+========================================================= */
 
-function applyAdminFilter() {
+function applyAdminFilter(){
 
-  const district =
-    document.getElementById(
-      "districtFilter"
-    ).value;
+if(
+!layers.gndPopulation
+)
+return;
 
 
-  const dsd =
-    document.getElementById(
-      "dsdFilter"
-    ).value;
+const district =
+document.getElementById(
+"districtFilter"
+).value;
 
 
-  const gnd =
-    document.getElementById(
-      "gndFilter"
-    ).value;
+const dsd =
+document.getElementById(
+"dsdFilter"
+).value;
 
 
-  if (!layers.gndPopulation) {
+const gnd =
+document.getElementById(
+"gndFilter"
+).value;
 
-    return;
 
-  }
+/*
+GND population layer
+*/
 
+layers.gndPopulation
+.eachLayer(
+layer=>{
 
-  layers.gndPopulation.eachLayer(
-    layer => {
+const p =
+layer.feature
+.properties;
 
-      const p =
-        layer.feature.properties;
 
+let visible=true;
 
-      let visible = true;
 
+if(
+district &&
+detectedFields.district
+){
 
-      if (
-        district &&
-        detectedFields.district
-      ) {
-
-        visible =
-          String(
-            p[
-              detectedFields.district
-            ]
-          ) === district;
-
-      }
-
-
-      if (
-        visible &&
-        dsd &&
-        detectedFields.dsd
-      ) {
-
-        visible =
-          String(
-            p[
-              detectedFields.dsd
-            ]
-          ) === dsd;
-
-      }
-
-
-      if (
-        visible &&
-        gnd &&
-        detectedFields.gnd
-      ) {
-
-        visible =
-          String(
-            p[
-              detectedFields.gnd
-            ]
-          ) === gnd;
-
-      }
-
-
-      if (visible) {
-
-        if (!map.hasLayer(
-          layers.gndPopulation
-        )) {
-
-          layers.gndPopulation
-            .addTo(map);
-
-        }
-
-        layer.setStyle({
-          opacity: 1,
-          fillOpacity: 0.25
-        });
-
-      }
-
-      else {
-
-        layer.setStyle({
-          opacity: 0,
-          fillOpacity: 0
-        });
-
-      }
-
-    }
-
-  );
-
-
-  /*
-    Zoom to selected GND / DSD / District.
-  */
-
-  const visibleLayers = [];
-
-
-  layers.gndPopulation.eachLayer(
-    layer => {
-
-      const p =
-        layer.feature.properties;
-
-
-      let visible = true;
-
-
-      if (
-        district &&
-        detectedFields.district
-      ) {
-
-        visible =
-          String(
-            p[
-              detectedFields.district
-            ]
-          ) === district;
-
-      }
-
-
-      if (
-        visible &&
-        dsd &&
-        detectedFields.dsd
-      ) {
-
-        visible =
-          String(
-            p[
-              detectedFields.dsd
-            ]
-          ) === dsd;
-
-      }
-
-
-      if (
-        visible &&
-        gnd &&
-        detectedFields.gnd
-      ) {
-
-        visible =
-          String(
-            p[
-              detectedFields.gnd
-            ]
-          ) === gnd;
-
-      }
-
-
-      if (visible) {
-
-        visibleLayers.push(layer);
-
-      }
-
-    }
-  );
-
-
-  if (
-    visibleLayers.length > 0 &&
-    (district || dsd || gnd)
-  ) {
-
-    const group =
-      L.featureGroup(
-        visibleLayers
-      );
-
-    try {
-
-      map.fitBounds(
-        group.getBounds(),
-        {
-          padding: [30,30],
-          maxZoom: 13
-        }
-      );
-
-    } catch(e) {}
-
-  }
+visible =
+String(
+p[
+detectedFields.district
+]
+)
+===
+district;
 
 }
 
 
-/* =====================================================
-   LEGEND
-===================================================== */
+if(
+visible &&
+dsd &&
+detectedFields.dsd
+){
+
+visible =
+String(
+p[
+detectedFields.dsd
+]
+)
+===
+dsd;
+
+}
+
+
+if(
+visible &&
+gnd &&
+detectedFields.gnd
+){
+
+visible =
+String(
+p[
+detectedFields.gnd
+]
+)
+===
+gnd;
+
+}
+
+
+layer.setStyle({
+
+opacity:
+visible
+?
+1
+:
+0,
+
+fillOpacity:
+visible
+?
+.16
+:
+0
+
+});
+
+});
+
+
+/*
+DSD abandonment layer
+*/
+
+if(
+layers.abandoned
+){
+
+layers.abandoned
+.eachLayer(
+layer=>{
+
+const p =
+layer.feature
+.properties;
+
+
+let visible=true;
+
+
+if(
+district &&
+detectedFields.district
+){
+
+visible =
+String(
+p[
+detectedFields.district
+]
+)
+===
+district;
+
+}
+
+
+if(
+visible &&
+dsd &&
+detectedFields.dsd
+){
+
+visible =
+String(
+p[
+detectedFields.dsd
+]
+)
+===
+dsd;
+
+}
+
+
+if(
+visible &&
+gnd
+){
+
+/*
+GND selection is not directly
+used to colour the DSD rate.
+The GND population layer is
+the GND selection layer.
+*/
+
+}
+
+
+layer.setStyle({
+
+opacity:
+visible
+?
+1
+:
+0,
+
+fillOpacity:
+visible
+?
+.72
+:
+0
+
+});
+
+});
+
+}
+
+}
+
+
+/* =========================================================
+RESET
+========================================================= */
+
+function resetFilters(){
+
+document.getElementById(
+"districtFilter"
+).value="";
+
+
+populateSelect(
+"dsdFilter",
+raw.gndPopulation
+?
+raw.gndPopulation.features.map(
+f=>
+detectedFields.dsd
+?
+f.properties[
+detectedFields.dsd
+]
+:
+[]
+)
+:
+[],
+"All DSDs"
+);
+
+
+populateSelect(
+"gndFilter",
+raw.gndPopulation
+?
+raw.gndPopulation.features.map(
+f=>
+detectedFields.gnd
+?
+f.properties[
+detectedFields.gnd
+]
+:
+[]
+)
+:
+[],
+"All GNDs"
+);
+
+
+applyAdminFilter();
+
+
+if(
+layers.province
+){
+
+try{
+
+map.fitBounds(
+layers.province.getBounds(),
+{
+padding:
+[20,20]
+}
+);
+
+}
+catch(e){}
+
+}
+
+}
+
+
+/* =========================================================
+LOCATION SELECTION
+========================================================= */
+
+function startLocationSelection(){
+
+selectingLocation=true;
+
+
+document.getElementById(
+"locationMessage"
+).textContent=
+
+"Location selection is ON. Go to Interactive Map and click the required location.";
+
+
+openTab(
+
+"mapTab",
+
+document.querySelectorAll(
+".tabButton"
+)[1]
+
+);
+
+}
+
+
+/*
+Map click
+*/
+
+map.on(
+"click",
+function(event){
+
+if(
+!selectingLocation
+)
+return;
+
+
+const lat =
+event.latlng.lat;
+
+
+const lng =
+event.latlng.lng;
+
+
+setSelectedLocation(
+lat,
+lng
+);
+
+
+selectingLocation=false;
+
+}
+);
+
+
+/* =========================================================
+SET LOCATION
+========================================================= */
+
+function setSelectedLocation(
+lat,
+lng
+){
+
+document.getElementById(
+"selectedLat"
+).textContent =
+Number(lat).toFixed(6);
+
+
+document.getElementById(
+"selectedLng"
+).textContent =
+Number(lng).toFixed(6);
+
+
+document.getElementById(
+"locationMessage"
+).textContent =
+"Location selected successfully.";
+
+
+if(
+selectedMarker
+){
+
+map.removeLayer(
+selectedMarker
+);
+
+}
+
+
+selectedMarker =
+
+L.marker(
+[lat,lng],
+{
+draggable:true
+}
+)
+.addTo(map);
+
+
+selectedMarker.bindPopup(
+
+"<b>Selected Report Location</b>"+
+"<br><br>"+
+"Latitude: "+
+Number(lat).toFixed(6)+
+"<br>"+
+"Longitude: "+
+Number(lng).toFixed(6)
+
+)
+.openPopup();
+
+
+selectedMarker.on(
+"dragend",
+function(){
+
+const p =
+selectedMarker.getLatLng();
+
+
+setSelectedLocation(
+p.lat,
+p.lng
+);
+
+});
+
+}
+
+
+/* =========================================================
+CURRENT LOCATION
+========================================================= */
+
+function useMyLocation(){
+
+if(
+!navigator.geolocation
+){
+
+alert(
+"Geolocation is not supported."
+);
+
+return;
+
+}
+
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+const lat =
+position.coords.latitude;
+
+
+const lng =
+position.coords.longitude;
+
+
+setSelectedLocation(
+lat,
+lng
+);
+
+
+map.setView(
+[lat,lng],
+15
+);
+
+
+openTab(
+
+"communityTab",
+
+document.querySelectorAll(
+".tabButton"
+)[2]
+
+);
+
+},
+
+function(){
+
+alert(
+"Could not access your current location."
+);
+
+}
+
+);
+
+}
+
+
+/* =========================================================
+GOOGLE FORM
+========================================================= */
+
+function openGoogleForm(){
+
+const lat =
+document.getElementById(
+"selectedLat"
+).textContent;
+
+
+const lng =
+document.getElementById(
+"selectedLng"
+).textContent;
+
+
+if(
+lat==="Not selected"
+){
+
+alert(
+"First select a location on the map."
+);
+
+return;
+
+}
+
+
+/*
+If entry IDs are provided,
+Google Form will open with
+coordinates pre-filled.
+*/
+
+if(
+LAT_ENTRY &&
+LNG_ENTRY
+){
+
+const formURL =
+
+GOOGLE_FORM_URL+
+
+"?usp=pp_url&"+
+
+encodeURIComponent(
+LAT_ENTRY
+)+
+"="+
+encodeURIComponent(
+lat
+)+
+
+"&"+
+
+encodeURIComponent(
+LNG_ENTRY
+)+
+"="+
+encodeURIComponent(
+lng
+);
+
+
+window.open(
+formURL,
+"_blank"
+);
+
+
+return;
+
+}
+
+
+/*
+Fallback:
+copy coordinates.
+*/
+
+if(
+navigator.clipboard
+){
+
+navigator.clipboard
+.writeText(
+lat+
+", "+
+lng
+);
+
+}
+
+
+alert(
+
+"Coordinates copied: "+
+lat+
+", "+
+lng+
+"\n\nGoogle Form will now open. Paste these coordinates into the Latitude and Longitude fields."
+
+);
+
+
+window.open(
+GOOGLE_FORM_URL,
+"_blank"
+);
+
+}
+
+
+/* =========================================================
+LEGEND
+========================================================= */
 
 const legend =
-  L.control({
-    position: "bottomright"
-  });
+L.control({
+
+position:
+"bottomright"
+
+});
 
 
 legend.onAdd =
-  function(map) {
+function(){
 
-    const div =
-      L.DomUtil.create(
-        "div",
-        "legend"
-      );
-
-
-    div.innerHTML =
-      "<div class='legend-title'>" +
-      "Abandonment Rate" +
-      "</div>";
+const div =
+L.DomUtil.create(
+"div",
+"legend"
+);
 
 
-    const items = [
+div.innerHTML =
 
-      ["#edf8e9", "0–10%"],
-
-      ["#bae4b3", "10–25%"],
-
-      ["#74c476", "25–50%"],
-
-      ["#31a354", "50–75%"],
-
-      ["#006d2c", "75–100%"],
-
-      ["#bdbdbd", "No data"]
-
-    ];
+"<div class='legend-title'>"+
+"Abandonment Rate – DSD-wise"+
+"</div>";
 
 
-    items.forEach(
-      item => {
+const abandonmentItems = [
 
-        div.innerHTML +=
+[
+"#edf8e9",
+"0–10%"
+],
 
-          "<div class='legend-item'>" +
+[
+"#bae4b3",
+"10–25%"
+],
 
-          "<span class='legend-box' " +
+[
+"#74c476",
+"25–50%"
+],
 
-          "style='background:" +
-          item[0] +
-          "'></span>" +
+[
+"#31a354",
+"50–75%"
+],
 
-          item[1] +
+[
+"#006d2c",
+"75–100%"
+],
 
-          "</div>";
+[
+"#d9d9d9",
+"No data"
+]
 
-      }
-    );
-
-
-    div.innerHTML +=
-
-      "<br>" +
-
-      "<div class='legend-title'>" +
-      "Population Density 2024" +
-      "</div>";
-
-
-    const popItems = [
-
-      ["#fff7bc", "Very Low"],
-
-      ["#fec44f", "Low"],
-
-      ["#fe9929", "Moderate"],
-
-      ["#ec7014", "High"],
-
-      ["#cc4c02", "Very High"]
-
-    ];
+];
 
 
-    popItems.forEach(
-      item => {
+abandonmentItems
+.forEach(
+item=>{
 
-        div.innerHTML +=
+div.innerHTML +=
 
-          "<div class='legend-item'>" +
+"<div class='legend-row'>"+
 
-          "<span class='legend-box' " +
+"<span class='legend-box' "+
+"style='background:"+
+item[0]+
+"'></span>"+
 
-          "style='background:" +
-          item[0] +
-          "'></span>" +
+item[1]+
 
-          item[1] +
+"</div>";
 
-          "</div>";
-
-      }
-    );
+});
 
 
-    return div;
+div.innerHTML +=
 
-  };
+"<br>"+
+
+"<div class='legend-title'>"+
+"Population Density 2024"+
+"</div>";
+
+
+const populationItems = [
+
+[
+"#fff7bc",
+"Very Low"
+],
+
+[
+"#fec44f",
+"Low"
+],
+
+[
+"#fe9929",
+"Moderate"
+],
+
+[
+"#ec7014",
+"High"
+],
+
+[
+"#cc4c02",
+"Very High"
+]
+
+];
+
+
+populationItems
+.forEach(
+item=>{
+
+div.innerHTML +=
+
+"<div class='legend-row'>"+
+
+"<span class='legend-box' "+
+"style='background:"+
+item[0]+
+"'></span>"+
+
+item[1]+
+
+"</div>";
+
+});
+
+
+div.innerHTML +=
+
+"<br>"+
+
+"<div class='legend-title'>"+
+"Paddy Land Grid"+
+"</div>";
+
+
+const paddyItems = [
+
+[
+"#ffffcc",
+"Low"
+],
+
+[
+"#c7e9b4",
+"Moderate"
+],
+
+[
+"#7fcdbb",
+"Medium"
+],
+
+[
+"#41b6c4",
+"High"
+],
+
+[
+"#225ea8",
+"Very High"
+]
+
+];
+
+
+paddyItems
+.forEach(
+item=>{
+
+div.innerHTML +=
+
+"<div class='legend-row'>"+
+
+"<span class='legend-box' "+
+"style='background:"+
+item[0]+
+"'></span>"+
+
+item[1]+
+
+"</div>";
+
+});
+
+
+div.innerHTML +=
+
+"<br>"+
+
+"<div class='legend-title'>"+
+"Transport"+
+"</div>";
+
+
+div.innerHTML +=
+
+"<div class='legend-row'>"+
+"<span class='legend-line' "+
+"style='background:#8b0000'></span>"+
+"Expressway"+
+"</div>";
+
+
+div.innerHTML +=
+
+"<div class='legend-row'>"+
+"<span class='legend-line' "+
+"style='background:#d32f2f'></span>"+
+"A-Class Road"+
+"</div>";
+
+
+div.innerHTML +=
+
+"<div class='legend-row'>"+
+"<span class='legend-line' "+
+"style='background:#212121'></span>"+
+"B-Class Road"+
+"</div>";
+
+
+return div;
+
+};
 
 
 legend.addTo(map);
 
 
-/* =====================================================
-   TAB FUNCTION
-===================================================== */
+/* =========================================================
+TAB FUNCTION
+========================================================= */
 
 function openTab(
-  tabId,
-  button
-) {
+tabID,
+button
+){
 
-  document
-    .querySelectorAll(".tab")
-    .forEach(
-      tab =>
-        tab.classList.remove(
-          "active"
-        )
-    );
-
-
-  document
-    .querySelectorAll(".tabButton")
-    .forEach(
-      btn =>
-        btn.classList.remove(
-          "active"
-        )
-    );
+document
+.querySelectorAll(".tab")
+.forEach(
+tab=>
+tab.classList.remove(
+"active"
+)
+);
 
 
-  document
-    .getElementById(tabId)
-    .classList.add(
-      "active"
-    );
+document
+.querySelectorAll(".tabButton")
+.forEach(
+btn=>
+btn.classList.remove(
+"active"
+)
+);
 
 
-  button.classList.add(
-    "active"
-  );
+document
+.getElementById(tabID)
+.classList.add(
+"active"
+);
 
 
-  if (tabId === "mapTab") {
+if(button)
+button.classList.add(
+"active"
+);
 
-    setTimeout(
-      () => map.invalidateSize(),
-      200
-    );
 
-  }
+if(
+tabID==="mapTab"
+){
+
+setTimeout(
+function(){
+
+map.invalidateSize();
+
+},
+200
+);
+
+}
 
 }
 
 
-/* =====================================================
-   START
-===================================================== */
+/* =========================================================
+START
+========================================================= */
 
-loadAllLayers();
+loadAll();
 
 </script>
 
